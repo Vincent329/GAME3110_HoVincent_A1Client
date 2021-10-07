@@ -12,7 +12,7 @@ public class NetworkedClient : MonoBehaviour
     int reliableChannelID;
     int unreliableChannelID;
     int hostID;
-    int socketPort = 5491;
+    int socketPort = 50653;
     byte error;
     bool isConnected = false;
     int ourClientID;
@@ -26,8 +26,8 @@ public class NetworkedClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.S))
-        //    SendMessageToHost("Hello from client");
+        if (Input.GetKeyDown(KeyCode.S))
+            SendMessageToHost("Hello from client");
 
         UpdateNetworkConnection();
     }

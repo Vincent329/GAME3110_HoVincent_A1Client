@@ -40,7 +40,7 @@ public class LazyProfessorClient : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.D))
             SendMessageToHost(ClientToServerTransferSignifiers.SubmitDiscordUserName + ",Vince3Ho#9395");
-
+        
         UpdateNetworkConnection();
     }
 
