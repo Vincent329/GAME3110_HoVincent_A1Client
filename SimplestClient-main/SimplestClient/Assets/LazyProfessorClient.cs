@@ -41,6 +41,9 @@ public class LazyProfessorClient : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D))
             SendMessageToHost(ClientToServerTransferSignifiers.SubmitDiscordUserName + ",Vince3Ho#9395");
         
+        else if (Input.GetKeyDown(KeyCode.R))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitAssignmentTwoLink + ",https://docs.google.com/document/d/19LMHfVapNLOnsnruTNaau7k75VUXDKtmEx2fvXvNZho/edit");
+        
         UpdateNetworkConnection();
     }
 
