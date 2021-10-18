@@ -12,14 +12,24 @@ public class NetworkedClient : MonoBehaviour
     int reliableChannelID;
     int unreliableChannelID;
     int hostID;
-    int socketPort = 50653;
+    int socketPort = 5491;
     byte error;
     bool isConnected = false;
     int ourClientID;
 
+    GameObject gameSystemManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in allObjects)
+        {
+            if (go.GetComponent<GameSystemManager>() != null)
+            {
+                gameSystemManager = go;
+            }
+        }
         Connect();
     }
 
@@ -79,7 +89,7 @@ public class NetworkedClient : MonoBehaviour
             hostID = NetworkTransport.AddHost(topology, 0);
             Debug.Log("Socket open.  Host ID = " + hostID);
 
-            connectionID = NetworkTransport.Connect(hostID, "99.241.133.166", socketPort, 0, out error); // server is local on network
+            connectionID = NetworkTransport.Connect(hostID, "10.0.0.3", socketPort, 0, out error); // server is local on network
 
             if (error == 0)
             {
@@ -105,6 +115,25 @@ public class NetworkedClient : MonoBehaviour
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
+
+        string[] csv = msg.Split(',');
+        int signifier = int.Parse(csv[0]);
+
+        if (signifier == ServerToClientSignifiers.AccountCreationComplete)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
+        } else if (signifier == ServerToClientSignifiers.LoginComplete)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
+
+        } else if (signifier == ServerToClientSignifiers.OpponentPlay)
+        {
+            Debug.Log("Opponent Play");
+        }
+        else if (signifier == ServerToClientSignifiers.GameStart)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
+        }
     }
 
     public bool IsConnected()
@@ -119,7 +148,8 @@ public static class ClientToServerSignifiers
 {
     public const int CreateAccount = 1;
     public const int Login = 2;
-
+    public const int WaitingToJoinGameRoom = 3;
+    public const int TicTacToePlay = 4;
 }
 public static class ServerToClientSignifiers
 {
@@ -127,5 +157,7 @@ public static class ServerToClientSignifiers
     public const int LoginFailed = 2;
     public const int AccountCreationComplete = 3;
     public const int AccountCreationFailed = 4;
+    public const int OpponentPlay = 5;
+    public const int GameStart = 6;
 
 }
