@@ -8,7 +8,7 @@ public class NetworkedClient : MonoBehaviour
 {
 
     int connectionID;
-    int maxConnections = 1000;
+    int maxConnections = 1000; // maximum amount of users that can get into the server
     int reliableChannelID;
     int unreliableChannelID;
     int hostID;
@@ -23,6 +23,8 @@ public class NetworkedClient : MonoBehaviour
     void Start()
     {
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+
+        // search for the game system manager in the client side
         foreach (GameObject go in allObjects)
         {
             if (go.GetComponent<GameSystemManager>() != null)
@@ -112,6 +114,12 @@ public class NetworkedClient : MonoBehaviour
         NetworkTransport.Send(hostID, connectionID, reliableChannelID, buffer, msg.Length * sizeof(char), out error);
     }
 
+    public void SendChatMessageToHost(string msg)
+    {
+        byte[] buffer = Encoding.Unicode.GetBytes(msg);
+
+    }
+
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
@@ -150,6 +158,7 @@ public static class ClientToServerSignifiers
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
     public const int TicTacToePlay = 4;
+    public const int SendChatMessage = 5;
 }
 public static class ServerToClientSignifiers
 {

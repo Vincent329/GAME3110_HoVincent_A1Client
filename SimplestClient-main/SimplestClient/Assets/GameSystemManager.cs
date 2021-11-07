@@ -8,6 +8,7 @@ public class GameSystemManager : MonoBehaviour
     GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle, ticTacToeSquareButton;
     GameObject textNameInfo, textPasswordInfo;
 
+    // calling the networked client class
     GameObject networkedClient;
     // Start is called before the first frame update
     void Start()
@@ -141,6 +142,11 @@ public class GameSystemManager : MonoBehaviour
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
         ChangeStates(GameStates.TicTacToe);
     }
+
+    public void SendChatMessage()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendChatMessage + "");
+    }
 }
 
 static public class GameStates
@@ -149,4 +155,5 @@ static public class GameStates
     public const int MainMenu = 2;
     public const int WaitingForPlayers = 3;
     public const int TicTacToe = 4;
+    public const int Chatroom = 5;
 }
