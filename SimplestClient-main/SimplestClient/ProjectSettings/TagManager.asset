@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ChatTextBox
+  - Preset1
+  - Preset2
+  - Preset3
+  - Preset4
+  - SubmitMessageButton
+  - ChatTextPanel
   layers:
   - Default
   - TransparentFX

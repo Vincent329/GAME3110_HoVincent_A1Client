@@ -5,11 +5,18 @@ using UnityEngine.UI;
 
 public class GameSystemManager : MonoBehaviour
 {
+    // login UI
     GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle, ticTacToeSquareButton;
     GameObject textNameInfo, textPasswordInfo;
 
-    // calling the networked client class
+    // chatroom input
+    GameObject chatInputField;
+    GameObject submitMsgButton, presetMsgButton1, presetMsgButton2, presetMsgButton3, presetMsgButton4, chatMessagePanel;
+
+
+    // Containing a reference to the network client script
     GameObject networkedClient;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +24,7 @@ public class GameSystemManager : MonoBehaviour
 
         foreach (GameObject go in allObjects)
         {
+            // setup for login screen
             if (go.name == "UsernameInputField")
             {
                 userNameInput = go;
@@ -53,6 +61,23 @@ public class GameSystemManager : MonoBehaviour
             { createToggle = go; }
             else if (go.name == "NetworkedClient")
             { networkedClient = go; }
+
+            // chat window
+            else if (go.tag == "SubmitMessageButton")
+            { submitMsgButton = go; } 
+            else if (go.tag == "ChatTextPanel")
+            { chatMessagePanel = go; } 
+            else if (go.tag == "Preset1")
+            { presetMsgButton1 = go; }
+            else if (go.tag == "Preset2")
+            { presetMsgButton2 = go; }
+            else if (go.tag == "Preset3")
+            { presetMsgButton3 = go; }
+            else if (go.tag == "Preset4")
+            { presetMsgButton4 = go; }
+            else if (go.tag == "ChatTextBox")
+            { chatInputField = go; }
+
         }
         submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
         loginToggle.GetComponent<Toggle>().onValueChanged.AddListener(LoginToggleChanged);
@@ -60,8 +85,15 @@ public class GameSystemManager : MonoBehaviour
         joinGameButton.GetComponent<Button>().onClick.AddListener(JoinGameRoomButtonPressed); // on clicking the button, join game roon button pressed function is called
         ticTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed); // on clicking the button, join game roon button pressed function is called
 
+        submitMsgButton.GetComponent<Button>().onClick.AddListener(SendChatMessage);
+
         ChangeStates(GameStates.LoginMenu);
     }
+
+    /// <summary>
+    /// When the submit button is pressed, we get the password and username input from the input field text box
+    /// send this altogether in one string, with the signifier first, and the name and password.
+    /// </summary>
     public void SubmitButtonPressed()
     {
         // we want to send login to server
@@ -72,6 +104,7 @@ public class GameSystemManager : MonoBehaviour
 
         // choosing whether to create an an account or a login,
         // separation of signifier, name, and password, spitting out the message
+       
         if (createToggle.GetComponent<Toggle>().isOn)
             msg = ClientToServerSignifiers.CreateAccount + "," + n + "," + p;
         else
@@ -93,6 +126,10 @@ public class GameSystemManager : MonoBehaviour
             loginToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
+    /// <summary>
+    /// depending on what the state of the menu is, change the UI accordingly
+    /// </summary>
+    /// <param name="newState"></param>
     public void ChangeStates(int newState)
     {
         submitButton.SetActive(false);
@@ -145,6 +182,10 @@ public class GameSystemManager : MonoBehaviour
 
     public void SendChatMessage()
     {
+        string text = chatInputField.GetComponent<InputField>().text;
+        // take the message from 
+        string msg;
+        msg = ClientToServerSignifiers.SendChatMessage + "," + text; 
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendChatMessage + "");
     }
 }
