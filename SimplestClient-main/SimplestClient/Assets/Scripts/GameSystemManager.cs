@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameSystemManager : MonoBehaviour
 {
     // login UI
-    GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle, ticTacToeSquareButton;
+    GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle /*, ticTacToeSquareButton*/;
     GameObject textNameInfo, textPasswordInfo;
 
     // tic tac toe UI
@@ -15,7 +15,7 @@ public class GameSystemManager : MonoBehaviour
     // [0,1] [1,1] [2,1]
     // [0,2] [1,2] [2,2]
     //
-    GameObject button00, button10, button20, button01, button11, button21, button02, button12, button22;
+    GameObject ticTacToeManager;
 
     // Containing a reference to the network client script
     GameObject networkedClient;
@@ -45,10 +45,10 @@ public class GameSystemManager : MonoBehaviour
             {
                 joinGameButton = go;
             }
-            else if (go.name == "TicTacToeSquareButton")
-            {
-                ticTacToeSquareButton = go;
-            }
+            //else if (go.name == "TicTacToeSquareButton")
+            //{
+            //    ticTacToeSquareButton = go;
+            //}
 
             else if (go.name == "UsernameText")
             {
@@ -65,6 +65,11 @@ public class GameSystemManager : MonoBehaviour
             else if (go.name == "NetworkedClient")
             { networkedClient = go; }
 
+            // activate the tic tac toe manager
+            else if (go.name == "TicTacToe")
+            {
+                ticTacToeManager = go;
+            }
      
 
         }
@@ -72,7 +77,7 @@ public class GameSystemManager : MonoBehaviour
         loginToggle.GetComponent<Toggle>().onValueChanged.AddListener(LoginToggleChanged);
         createToggle.GetComponent<Toggle>().onValueChanged.AddListener(CreateToggleChanged);
         joinGameButton.GetComponent<Button>().onClick.AddListener(JoinGameRoomButtonPressed); // on clicking the button, join game roon button pressed function is called
-        ticTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed); // on clicking the button, join game roon button pressed function is called
+        //ticTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed); // on clicking the button, join game roon button pressed function is called
 
         //submitMsgButton.GetComponent<Button>().onClick.AddListener(SendChatMessage);
 
@@ -127,10 +132,10 @@ public class GameSystemManager : MonoBehaviour
         userNameInput.SetActive(false);
         passwordInput.SetActive(false);
         joinGameButton.SetActive(false);
-        ticTacToeSquareButton.SetActive(false);
+       // ticTacToeSquareButton.SetActive(false);
         textNameInfo.SetActive(false);
         textPasswordInfo.SetActive(false);
-
+        ticTacToeManager.SetActive(false);
 
         if (newState == GameStates.LoginMenu)
         {
@@ -154,7 +159,8 @@ public class GameSystemManager : MonoBehaviour
         }
         else if (newState == GameStates.TicTacToe)
         {
-            ticTacToeSquareButton.SetActive(true);
+            // ticTacToeSquareButton.SetActive(true);
+            ticTacToeManager.SetActive(true);
         }
     }
 

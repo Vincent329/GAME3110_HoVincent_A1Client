@@ -144,6 +144,10 @@ public class NetworkedClient : MonoBehaviour
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
         }
+        else if (signifier == ServerToClientSignifiers.SendMessage)
+        {
+            Debug.Log("Change Message Here: "+msg);
+        }
     }
 
     public bool IsConnected()
@@ -172,5 +176,6 @@ public static class ServerToClientSignifiers
     public const int AccountCreationFailed = 4;
     public const int OpponentPlay = 5;
     public const int GameStart = 6;
+    public const int SendMessage = 7;
 
 }
