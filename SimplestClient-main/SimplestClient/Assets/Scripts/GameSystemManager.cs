@@ -9,10 +9,13 @@ public class GameSystemManager : MonoBehaviour
     GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle, ticTacToeSquareButton;
     GameObject textNameInfo, textPasswordInfo;
 
-    // chatroom input
-    GameObject chatInputField;
-    GameObject submitMsgButton, presetMsgButton1, presetMsgButton2, presetMsgButton3, presetMsgButton4, chatMessagePanel;
-
+    // tic tac toe UI
+    //
+    // [0,0] [1,0] [2,0]
+    // [0,1] [1,1] [2,1]
+    // [0,2] [1,2] [2,2]
+    //
+    GameObject button00, button10, button20, button01, button11, button21, button02, button12, button22;
 
     // Containing a reference to the network client script
     GameObject networkedClient;
@@ -29,7 +32,7 @@ public class GameSystemManager : MonoBehaviour
             {
                 userNameInput = go;
             }
-            
+
             else if (go.name == "PasswordInputField")
             {
                 passwordInput = go;
@@ -62,21 +65,7 @@ public class GameSystemManager : MonoBehaviour
             else if (go.name == "NetworkedClient")
             { networkedClient = go; }
 
-            // chat window
-            else if (go.tag == "SubmitMessageButton")
-            { submitMsgButton = go; } 
-            else if (go.tag == "ChatTextPanel")
-            { chatMessagePanel = go; } 
-            else if (go.tag == "Preset1")
-            { presetMsgButton1 = go; }
-            else if (go.tag == "Preset2")
-            { presetMsgButton2 = go; }
-            else if (go.tag == "Preset3")
-            { presetMsgButton3 = go; }
-            else if (go.tag == "Preset4")
-            { presetMsgButton4 = go; }
-            else if (go.tag == "ChatTextBox")
-            { chatInputField = go; }
+     
 
         }
         submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
@@ -85,7 +74,7 @@ public class GameSystemManager : MonoBehaviour
         joinGameButton.GetComponent<Button>().onClick.AddListener(JoinGameRoomButtonPressed); // on clicking the button, join game roon button pressed function is called
         ticTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed); // on clicking the button, join game roon button pressed function is called
 
-        submitMsgButton.GetComponent<Button>().onClick.AddListener(SendChatMessage);
+        //submitMsgButton.GetComponent<Button>().onClick.AddListener(SendChatMessage);
 
         ChangeStates(GameStates.LoginMenu);
     }
@@ -176,17 +165,16 @@ public class GameSystemManager : MonoBehaviour
     }
     public void TicTacToeSquareButtonPressed()
     {
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToe + "");
         ChangeStates(GameStates.TicTacToe);
     }
 
     public void SendChatMessage()
     {
-        string text = chatInputField.GetComponent<InputField>().text;
+   
         // take the message from 
         string msg;
-        msg = ClientToServerSignifiers.SendChatMessage + "," + text; 
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendChatMessage + "");
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendPresetMessage + "");
     }
 }
 
@@ -196,5 +184,4 @@ static public class GameStates
     public const int MainMenu = 2;
     public const int WaitingForPlayers = 3;
     public const int TicTacToe = 4;
-    public const int Chatroom = 5;
 }

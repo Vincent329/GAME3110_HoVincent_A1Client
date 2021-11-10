@@ -12,7 +12,7 @@ public class NetworkedClient : MonoBehaviour
     int reliableChannelID;
     int unreliableChannelID;
     int hostID;
-    int socketPort = 5491;
+    int socketPort = 10563;
     byte error;
     bool isConnected = false;
     int ourClientID;
@@ -138,6 +138,8 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Opponent Play");
         }
+
+        // should the game room be established, start the tic tac toe game
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
@@ -157,8 +159,10 @@ public static class ClientToServerSignifiers
     public const int CreateAccount = 1;
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
-    public const int TicTacToePlay = 4;
-    public const int SendChatMessage = 5;
+    public const int TicTacToe = 4;
+    public const int TicTacToeP1Action = 5;
+    public const int TicTacToeP2Action = 6;
+    public const int SendPresetMessage = 7;
 }
 public static class ServerToClientSignifiers
 {

@@ -44,6 +44,13 @@ public class LazyProfessorClient : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.R))
             SendMessageToHost(ClientToServerTransferSignifiers.SubmitAssignmentTwoLink + ",https://docs.google.com/document/d/19LMHfVapNLOnsnruTNaau7k75VUXDKtmEx2fvXvNZho/edit");
         
+        else if (Input.GetKeyDown(KeyCode.N))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitStreamDataLabGitRepoLink + ",https://github.com/Vincent329/GAME3110_StreamingDataLab");
+        else if (Input.GetKeyDown(KeyCode.W))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitNetworkedClientGitRepoLink + ",https://github.com/Vincent329/GAME3110_HoVincent_A1Client");
+        else if (Input.GetKeyDown(KeyCode.O))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitNetworkedServerGitRepoLink + ",https://github.com/Vincent329/GAME3110_HoVincent_A1Server");
+
         UpdateNetworkConnection();
     }
 
@@ -148,6 +155,5 @@ public static class ClientToServerTransferSignifiers
     public const int SubmitNetworkedClientGitRepoLink = 107;
     public const int SubmitAssignmentOneLink = 108;
     public const int SubmitAssignmentTwoLink = 109;
-    public const int SubmitAssignmentThreeLink = 110;
 
 }
