@@ -17,6 +17,8 @@ public class GameSystemManager : MonoBehaviour
     //
     GameObject ticTacToeManager;
 
+    public GameObject GetTicTacToeManager => ticTacToeManager;
+
     // Containing a reference to the network client script
     GameObject networkedClient;
 
@@ -175,13 +177,13 @@ public class GameSystemManager : MonoBehaviour
         ChangeStates(GameStates.TicTacToe);
     }
 
-    public void SendChatMessage()
-    {
+    //public void SendChatMessage()
+    //{
    
-        // take the message from 
-        string msg;
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendPresetMessage + "");
-    }
+    //    // take the mess
+    //    string msg;
+    //    networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendPresetMessage + "");
+    //}
 }
 
 static public class GameStates

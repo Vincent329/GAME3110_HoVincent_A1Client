@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class NetworkedClient : MonoBehaviour
@@ -30,7 +31,8 @@ public class NetworkedClient : MonoBehaviour
             if (go.GetComponent<GameSystemManager>() != null)
             {
                 gameSystemManager = go;
-            }
+            } 
+          
         }
         Connect();
     }
@@ -146,7 +148,8 @@ public class NetworkedClient : MonoBehaviour
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
         {
-            Debug.Log("Change Message Here: "+msg);
+            Debug.Log("Change Message Here: "+ csv[1]);
+            gameSystemManager.GetComponent<GameSystemManager>().GetTicTacToeManager.GetComponent<TicTacToeManager>().ReceiveMessage(csv[1]);
         }
     }
 

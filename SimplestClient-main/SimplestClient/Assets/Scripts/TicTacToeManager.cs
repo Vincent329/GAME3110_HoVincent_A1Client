@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TicTacToeManager : MonoBehaviour
 {
@@ -12,8 +13,13 @@ public class TicTacToeManager : MonoBehaviour
     //
     GameObject button00, button10, button20, button01, button11, button21, button02, button12, button22;
 
+    public Text textDisplay;
+
     GameObject networkedClient;
 
+    // Game Variables
+    [SerializeField] private int playerTurn;
+    
     private void OnEnable()
     {
         
@@ -27,5 +33,10 @@ public class TicTacToeManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ReceiveMessage(string message)
+    {
+        textDisplay.text = message;
     }
 }
