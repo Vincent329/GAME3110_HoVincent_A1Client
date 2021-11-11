@@ -136,7 +136,8 @@ public class NetworkedClient : MonoBehaviour
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
 
-        } else if (signifier == ServerToClientSignifiers.OpponentPlay)
+        } 
+        else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             Debug.Log("Opponent Play");
         }
@@ -145,10 +146,14 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
+            // over here, assign the player ID value as well
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
         {
             Debug.Log("Change Message Here: "+ csv[1]);
+
+            // connect to the Tic Tac Toe Manager through the game manager...
+            // might be a cleaner way to do this but this works
             gameSystemManager.GetComponent<GameSystemManager>().GetTicTacToeManager.GetComponent<TicTacToeManager>().ReceiveMessage(csv[1]);
         }
     }

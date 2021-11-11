@@ -162,6 +162,8 @@ public class GameSystemManager : MonoBehaviour
         else if (newState == GameStates.TicTacToe)
         {
             // ticTacToeSquareButton.SetActive(true);
+
+            // activates the tictactoe board
             ticTacToeManager.SetActive(true);
         }
     }
@@ -171,11 +173,12 @@ public class GameSystemManager : MonoBehaviour
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.WaitingToJoinGameRoom + "");
         ChangeStates(GameStates.WaitingForPlayers);
     }
-    public void TicTacToeSquareButtonPressed()
-    {
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToe + "");
-        ChangeStates(GameStates.TicTacToe);
-    }
+
+    //public void TicTacToeSquareButtonPressed()
+    //{
+    //    networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToe + "");
+    //    ChangeStates(GameStates.TicTacToe);
+    //}
 
     //public void SendChatMessage()
     //{
