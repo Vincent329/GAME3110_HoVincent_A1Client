@@ -182,14 +182,6 @@ public class GameSystemManager : MonoBehaviour
     //    networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToe + "");
     //    ChangeStates(GameStates.TicTacToe);
     //}
-
-    //public void SendChatMessage()
-    //{
-   
-    //    // take the mess
-    //    string msg;
-    //    networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.SendPresetMessage + "");
-    //}
 }
 
 static public class GameStates

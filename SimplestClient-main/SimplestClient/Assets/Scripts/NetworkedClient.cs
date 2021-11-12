@@ -35,10 +35,8 @@ public class NetworkedClient : MonoBehaviour
             if (go.GetComponent<GameSystemManager>() != null)
             {
                 gameSystemManager = go;
-            } 
-          
+            }          
         }
-
         ticTacToeManagerRef = gameSystemManager.GetComponent<GameSystemManager>().GetTicTacToeManager.GetComponent<TicTacToeManager>();
         Connect();
     }
@@ -122,12 +120,6 @@ public class NetworkedClient : MonoBehaviour
         NetworkTransport.Send(hostID, connectionID, reliableChannelID, buffer, msg.Length * sizeof(char), out error);
     }
 
-    public void SendChatMessageToHost(string msg)
-    {
-        byte[] buffer = Encoding.Unicode.GetBytes(msg);
-
-    }
-
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
@@ -146,13 +138,16 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             Debug.Log("Opponent Play");
+            // receive actions from the opponent
+            ticTacToeManagerRef.OpponentPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
         }
 
         // should the game room be established, start the tic tac toe game
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
-            ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
+            ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
+
             // over here, assign the player ID value as well
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
@@ -180,7 +175,7 @@ public static class ClientToServerSignifiers
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
     public const int TicTacToe = 4;
-    public const int PlayerAction = 5;
+    public const int PlayerAction = 5; // player on this side sends the action
     public const int SendPresetMessage = 6;
     public const int PlayerWins = 7;
 
@@ -191,7 +186,8 @@ public static class ServerToClientSignifiers
     public const int LoginFailed = 2;
     public const int AccountCreationComplete = 3;
     public const int AccountCreationFailed = 4;
-    public const int OpponentPlay = 5;
+
+    public const int OpponentPlay = 5; // receiving the opponent's action
     public const int GameStart = 6;
     public const int SendMessage = 7;
 

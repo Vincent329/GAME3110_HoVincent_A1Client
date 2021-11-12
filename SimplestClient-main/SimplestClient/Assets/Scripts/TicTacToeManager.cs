@@ -12,10 +12,12 @@ public class TicTacToeManager : MonoBehaviour
     // [0,2] [1,2] [2,2]
     //
     private int[,] ticTacToeboard;
-
     public int[,] GetTicTacToeBoard => ticTacToeboard;
-
+    
+    // player variables
+    // if current turn is not equal to the player ID, then it's not the player's turn to move
     [SerializeField] private int playerID;
+    public int currentTurn;
 
     // TODO:
     // on game start, assign the correct player ID as either 1 or 2
@@ -31,6 +33,10 @@ public class TicTacToeManager : MonoBehaviour
     public Text textDisplay;
     InputField chatInputField;
     Button sendButton;
+
+    // multicast delegate to search for the proper button appllied
+    public delegate void SearchButton(int row, int column);
+    public event SearchButton Search;
 
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
@@ -88,13 +94,30 @@ public class TicTacToeManager : MonoBehaviour
        
         ticTacToeboard[row, column] = currentPlayer;
         Debug.Log(ticTacToeboard[row, column]);
+        networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerAction + "," + row + "," + column + "," + playerID);
         // TODO:
         // send to the server
         // check possible win conditions
-        CheckWinCondition();
+        if (CheckWinCondition())
+        {
+            networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
+        } 
     }
     
-    private void CheckWinCondition()
+    /// <summary>
+    /// Specific function for when we're receiving actions from the opponent
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="column"></param>
+    /// <param name="opponentPlayer"></param>
+    public void OpponentPlacePosition(int row, int column, int opponentPlayer)
+    {
+        ticTacToeboard[row, column] = opponentPlayer;
+        // call the event
+        Search(row, column);
+    }
+
+    private bool CheckWinCondition()
     {
         if ((ticTacToeboard[0,0] == playerID && ticTacToeboard[1, 0] == playerID && ticTacToeboard[2, 0] == playerID)
         || (ticTacToeboard[0,1] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[2, 1] == playerID)
@@ -107,12 +130,18 @@ public class TicTacToeManager : MonoBehaviour
         {
             Debug.Log("Player " + playerID + " wins");
             textDisplay.text = "Player " + playerID + " wins";
-            networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
+            return true;
         }
         else
         {
             // switch player turn
+            return false;
         }
+    }
+
+    private void ResetGame()
+    {
+
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------

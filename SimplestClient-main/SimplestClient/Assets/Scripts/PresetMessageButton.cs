@@ -18,12 +18,6 @@ public class PresetMessageButton : MonoBehaviour
         buttonComp.onClick.AddListener(SendPresetMessageToOpponent);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// Send a message over
     /// </summary>
