@@ -168,6 +168,7 @@ public class GameSystemManager : MonoBehaviour
 
             // activates the tictactoe board, functionality will then be taken through there
             ticTacToeManager.SetActive(true);
+
         }
     }
 

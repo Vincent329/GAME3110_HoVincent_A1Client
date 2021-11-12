@@ -35,13 +35,13 @@ public class TicTacToeManager : MonoBehaviour
     Button sendButton;
 
     // multicast delegate to search for the proper button appllied
-    public delegate void SearchButton(int row, int column);
+    public delegate void SearchButton(int row, int column, int opponentID);
     public event SearchButton Search;
 
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
 
-    // Game Variables
+    // Game Variables... need to use this to delegate the turn order
     [SerializeField] private int playerTurn;
     
     /// <summary>
@@ -114,7 +114,7 @@ public class TicTacToeManager : MonoBehaviour
     {
         ticTacToeboard[row, column] = opponentPlayer;
         // call the event
-        Search(row, column);
+        Search(row, column, opponentPlayer);
     }
 
     private bool CheckWinCondition()

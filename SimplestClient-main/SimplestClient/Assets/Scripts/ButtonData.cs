@@ -47,7 +47,7 @@ public class ButtonData : MonoBehaviour
 
         if (!CheckIfOccupied())
         {
-            SetButtonAtLocation(XPos, YPos);
+            SetButtonAtLocation(XPos, YPos, ticTacToeManagerRef.PlayerID);
 
             // NOTIFIES THE TICTACTOE MANAGER THAT WE'RE PLACING A POSITION
             ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
@@ -56,11 +56,11 @@ public class ButtonData : MonoBehaviour
     }
 
     // just to set up a visual
-    private void SetButtonAtLocation(int row, int column)
+    private void SetButtonAtLocation(int row, int column, int playerID)
     {
         if (row == XPos && column == YPos)
         {
-            if (ticTacToeManagerRef.PlayerID == 1)
+            if (playerID == 1)
             {
                 buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; // test
             }

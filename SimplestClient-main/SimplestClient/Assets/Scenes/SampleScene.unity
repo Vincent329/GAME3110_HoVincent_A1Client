@@ -3727,7 +3727,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.649994, y: -3.59729}
+  m_AnchoredPosition: {x: 228, y: -3.59729}
   m_SizeDelta: {x: 573.5, y: 400.1675}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1512282387
@@ -3781,6 +3781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 0
+  currentTurn: 0
   textDisplay: {fileID: 1435932929}
   networkedClient: {fileID: 0}
   playerTurn: 0
