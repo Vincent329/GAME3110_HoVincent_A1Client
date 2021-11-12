@@ -34,22 +34,33 @@ public class ButtonData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // keep updating???
     }
 
     private void OnButtonClicked()
     {
         Debug.Log(XPos + "," + YPos);
         //buttonComp.interactable = false;
-        if (ticTacToeManagerRef.PlayerID == 1)
+        // check the manager ref if the icon is filled first
+
+        if (ticTacToeManagerRef.GetTicTacToeBoard[XPos, YPos] >= 1) // if it's 1 or higher, then the spot is already occupied
         {
-            buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; // test
+            buttonComp.interactable = false;
+            return;
         }
         else
         {
-            buttonComp.transform.GetChild(0).GetComponent<Text>().text = "X"; // test
+            if (ticTacToeManagerRef.PlayerID == 1)
+            {
+                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; // test
+            }
+            else
+            {
+                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "X"; // test
+            }
+            ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
+            buttonComp.interactable = false;
         }
-        ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
     }
 
     public void ButtonReset()

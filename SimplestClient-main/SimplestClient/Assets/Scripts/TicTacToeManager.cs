@@ -13,6 +13,7 @@ public class TicTacToeManager : MonoBehaviour
     //
     private int[,] ticTacToeboard;
 
+    public int[,] GetTicTacToeBoard => ticTacToeboard;
 
     [SerializeField] private int playerID;
 
@@ -87,6 +88,7 @@ public class TicTacToeManager : MonoBehaviour
        
         ticTacToeboard[row, column] = currentPlayer;
         Debug.Log(ticTacToeboard[row, column]);
+        textDisplay.text = ticTacToeboard[row, column].ToString();
         // send to the server
     }
     
