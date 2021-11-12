@@ -67,7 +67,7 @@ public class TicTacToeManager : MonoBehaviour
     void Start()
     {
         // set up the board size
-        ticTacToeboard = new int[2,2];
+        ticTacToeboard = new int[3,3];
     }
 
     // Update is called once per frame
@@ -82,21 +82,17 @@ public class TicTacToeManager : MonoBehaviour
     /// <param name="row"></param>
     /// <param name="column"></param>
     /// <param name="currentPlayer"></param>
-    private void PlacePosition(int row, int column, int currentPlayer)
+    public void PlacePosition(int row, int column, int currentPlayer)
     {
-        //for (int i = 0; i < 2; i++)
-        //{
-        //    for (int j = 0; j < 2; j++)
-        //    {
-        //        if (row == i && column == j)
-        //        {
-        //            ticTacToeboard[row, column] = currentPlayer;
-        //        }
-        //    }
-        //}
+       
         ticTacToeboard[row, column] = currentPlayer;
+        Debug.Log(ticTacToeboard[row, column]);
+        // send to the server
     }
     
+    /// <summary>
+    /// Sends a message over to the server for the other client.
+    /// </summary>
     private void SendChatMessage()
     {
         networkedClient.SendMessageToHost(ClientToServerSignifiers.SendPresetMessage + "," + chatInputField.text);

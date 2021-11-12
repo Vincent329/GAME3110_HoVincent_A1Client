@@ -22,12 +22,13 @@ public class ButtonData : MonoBehaviour
     // refer to the tic tac toe manager instead, which has the connection to GameSystemManager.
     // but also try to find ways to decouple... worry about that later
 
-    TicTacToeManager ticTacToeManager;
+    TicTacToeManager ticTacToeManagerRef;
 
     void Start()
     {
         buttonComp = GetComponent<Button>();
         buttonComp.onClick.AddListener(OnButtonClicked);
+        ticTacToeManagerRef = FindObjectOfType<TicTacToeManager>();
     }
 
     // Update is called once per frame
@@ -36,10 +37,19 @@ public class ButtonData : MonoBehaviour
         
     }
 
-    public void OnButtonClicked()
+    private void OnButtonClicked()
     {
         Debug.Log(XPos + "," + YPos);
         //buttonComp.interactable = false;
+        if (ticTacToeManagerRef.PlayerID == 1)
+        {
+            buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; // test
+        }
+        else
+        {
+            buttonComp.transform.GetChild(0).GetComponent<Text>().text = "X"; // test
+        }
+        ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
     }
 
     public void ButtonReset()

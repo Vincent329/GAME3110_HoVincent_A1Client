@@ -163,7 +163,7 @@ public class GameSystemManager : MonoBehaviour
         {
             // ticTacToeSquareButton.SetActive(true);
 
-            // activates the tictactoe board
+            // activates the tictactoe board, functionality will then be taken through there
             ticTacToeManager.SetActive(true);
         }
     }

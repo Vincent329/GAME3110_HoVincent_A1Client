@@ -18,7 +18,11 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
+    // All the gamesystemmanager needs to worry about is keeping track of states
     GameObject gameSystemManager;
+
+    TicTacToeManager ticTacToeManagerRef;
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +38,8 @@ public class NetworkedClient : MonoBehaviour
             } 
           
         }
+
+        ticTacToeManagerRef = gameSystemManager.GetComponent<GameSystemManager>().GetTicTacToeManager.GetComponent<TicTacToeManager>();
         Connect();
     }
 
@@ -145,6 +151,7 @@ public class NetworkedClient : MonoBehaviour
         // should the game room be established, start the tic tac toe game
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
+            ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
             // over here, assign the player ID value as well
         }
@@ -154,8 +161,9 @@ public class NetworkedClient : MonoBehaviour
 
             // connect to the Tic Tac Toe Manager through the game manager...
             // might be a cleaner way to do this but this works
-            gameSystemManager.GetComponent<GameSystemManager>().GetTicTacToeManager.GetComponent<TicTacToeManager>().ReceiveMessage(csv[1]);
+            ticTacToeManagerRef.ReceiveMessage(csv[1]);
         }
+
     }
 
     public bool IsConnected()
@@ -172,9 +180,10 @@ public static class ClientToServerSignifiers
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
     public const int TicTacToe = 4;
-    public const int TicTacToeP1Action = 5;
-    public const int TicTacToeP2Action = 6;
-    public const int SendPresetMessage = 7;
+    public const int PlayerAction = 5;
+    public const int SendPresetMessage = 6;
+    public const int PlayerWins = 7;
+
 }
 public static class ServerToClientSignifiers
 {
