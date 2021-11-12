@@ -61,8 +61,11 @@ public class ButtonData : MonoBehaviour
             ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
             buttonComp.interactable = false;
         }
+        // check active buttons?
     }
 
+    // run through for all tic tac toe buttons.
+    // call via tic tac toe manager
     public void ButtonReset()
     {
         buttonComp.interactable = true;

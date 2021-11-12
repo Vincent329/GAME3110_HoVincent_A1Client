@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Purpose of the game manager is to manage states
+/// </summary>
 public class GameSystemManager : MonoBehaviour
 {
     // login UI

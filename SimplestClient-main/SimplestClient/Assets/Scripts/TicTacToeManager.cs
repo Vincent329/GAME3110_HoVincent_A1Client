@@ -88,10 +88,35 @@ public class TicTacToeManager : MonoBehaviour
        
         ticTacToeboard[row, column] = currentPlayer;
         Debug.Log(ticTacToeboard[row, column]);
-        textDisplay.text = ticTacToeboard[row, column].ToString();
+        // TODO:
         // send to the server
+        // check possible win conditions
+        CheckWinCondition();
     }
     
+    private void CheckWinCondition()
+    {
+        if ((ticTacToeboard[0,0] == playerID && ticTacToeboard[1, 0] == playerID && ticTacToeboard[2, 0] == playerID)
+        || (ticTacToeboard[0,1] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[2, 1] == playerID)
+        || (ticTacToeboard[0,2] == playerID && ticTacToeboard[1, 2] == playerID && ticTacToeboard[2, 2] == playerID)
+        || (ticTacToeboard[0,0] == playerID && ticTacToeboard[0, 1] == playerID && ticTacToeboard[0, 2] == playerID)
+        || (ticTacToeboard[1,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[1, 2] == playerID)
+        || (ticTacToeboard[2,0] == playerID && ticTacToeboard[2, 1] == playerID && ticTacToeboard[2, 2] == playerID)
+        || (ticTacToeboard[0,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[2, 2] == playerID)
+        || (ticTacToeboard[2,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[0, 2] == playerID))
+        {
+            Debug.Log("Player " + playerID + " wins");
+            textDisplay.text = "Player " + playerID + " wins";
+            networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
+        }
+        else
+        {
+            // switch player turn
+        }
+    }
+
+    // ---------------- CHAT FUNCTIONALITY -------------------------------------
+
     /// <summary>
     /// Sends a message over to the server for the other client.
     /// </summary>
