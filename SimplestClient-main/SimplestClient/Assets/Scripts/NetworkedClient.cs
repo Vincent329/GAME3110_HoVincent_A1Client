@@ -130,11 +130,20 @@ public class NetworkedClient : MonoBehaviour
         if (signifier == ServerToClientSignifiers.AccountCreationComplete)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
-        } else if (signifier == ServerToClientSignifiers.LoginComplete)
+        } 
+        else if (signifier == ServerToClientSignifiers.LoginComplete)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
 
-        } 
+        }
+        else if (signifier == ServerToClientSignifiers.AccountCreationFailed)
+        {
+            Debug.Log("Account Not Created, please try again");
+        }
+        else if (signifier == ServerToClientSignifiers.LoginFailed)
+        {
+            Debug.Log("Login Failed, please try again");
+        }
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             Debug.Log("Opponent Play");
@@ -162,6 +171,7 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Opponent Has Won: " + csv[1]);
 
+            // reset button set active, send the notification to the opponent
         }
 
     }
@@ -174,15 +184,19 @@ public class NetworkedClient : MonoBehaviour
 
 }
 
+
 public static class ClientToServerSignifiers
 {
     public const int CreateAccount = 1;
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
     public const int TicTacToe = 4;
-    public const int PlayerAction = 5; // player on this side sends the action
+    public const int PlayerAction = 5;
     public const int SendPresetMessage = 6;
     public const int PlayerWins = 7;
+    public const int ResetGame = 8;
+    public const int LogAction = 9;
+    public const int RequestReplay = 10;
 
 }
 public static class ServerToClientSignifiers
@@ -196,5 +210,7 @@ public static class ServerToClientSignifiers
     public const int GameStart = 6;
     public const int SendMessage = 7;
     public const int NotifyOpponentWin = 8; // notify to the opponent that there's a win
+    public const int GameReset = 9;
 
 }
+

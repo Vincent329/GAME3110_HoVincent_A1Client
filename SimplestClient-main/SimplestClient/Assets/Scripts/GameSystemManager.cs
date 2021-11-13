@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GameSystemManager : MonoBehaviour
 {
     // login UI
-    GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle /*, ticTacToeSquareButton*/;
+    GameObject submitButton, joinGameButton, userNameInput, passwordInput, loginToggle, createToggle, ticTacToeReset /*, ticTacToeSquareButton*/;
     GameObject textNameInfo, textPasswordInfo;
 
     // tic tac toe UI
@@ -19,6 +19,7 @@ public class GameSystemManager : MonoBehaviour
     // [0,2] [1,2] [2,2]
     //
     GameObject ticTacToeManager;
+    
 
     public GameObject GetTicTacToeManager => ticTacToeManager;
 

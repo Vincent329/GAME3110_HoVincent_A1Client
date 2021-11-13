@@ -30,6 +30,7 @@ public class ButtonData : MonoBehaviour
         buttonComp.onClick.AddListener(OnButtonClicked);
         ticTacToeManagerRef = FindObjectOfType<TicTacToeManager>();
         ticTacToeManagerRef.Search += SetButtonAtLocation;
+        ticTacToeManagerRef.Reset += ReactivateButtonAtLocation;
     }
 
     // Update is called once per frame
@@ -82,6 +83,9 @@ public class ButtonData : MonoBehaviour
         return false;
     }
 
+
+    // run through for all tic tac toe buttons.
+    // call via tic tac toe manager
     public void ReactivateButtonAtLocation(int row, int column)
     {
         if (row == XPos && column == YPos)
@@ -89,12 +93,5 @@ public class ButtonData : MonoBehaviour
             buttonComp.transform.GetChild(0).GetComponent<Text>().text = ""; // test
             buttonComp.interactable = true;
         }
-    }
-
-    // run through for all tic tac toe buttons.
-    // call via tic tac toe manager
-    public void ButtonReset()
-    {
-        buttonComp.interactable = true;
     }
 }

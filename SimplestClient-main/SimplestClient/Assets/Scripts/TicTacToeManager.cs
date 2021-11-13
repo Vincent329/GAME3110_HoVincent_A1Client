@@ -32,11 +32,15 @@ public class TicTacToeManager : MonoBehaviour
 
     public Text textDisplay;
     InputField chatInputField;
-    Button sendButton;
+    Button sendButton, resetButton;
+
 
     // multicast delegate to search for the proper button appllied
     public delegate void SearchButton(int row, int column, int opponentID);
     public event SearchButton Search;
+
+    public delegate void ResetButton(int row, int column);
+    public event ResetButton Reset;
 
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
@@ -65,10 +69,14 @@ public class TicTacToeManager : MonoBehaviour
             if (tempButton.gameObject.name == "Send Message Button")
             {
                 sendButton = tempButton;
+            } else if (tempButton.gameObject.name == "Reset Game Button")
+            {
+                resetButton = tempButton;
             }
         }
 
         sendButton.onClick.AddListener(SendChatMessage);
+        resetButton.onClick.AddListener(ResetGame);
     }
 
     void Start()
@@ -101,6 +109,7 @@ public class TicTacToeManager : MonoBehaviour
         if (CheckWinCondition())
         {
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
+            // set buttons to 0
         } 
     }
     
@@ -112,6 +121,7 @@ public class TicTacToeManager : MonoBehaviour
     /// <param name="opponentPlayer"></param>
     public void OpponentPlacePosition(int row, int column, int opponentPlayer)
     {
+        // assign the player
         ticTacToeboard[row, column] = opponentPlayer;
         // call the event
         Search(row, column, opponentPlayer);
@@ -119,6 +129,7 @@ public class TicTacToeManager : MonoBehaviour
 
     private bool CheckWinCondition()
     {
+        // search all possible win conditions
         if ((ticTacToeboard[0,0] == playerID && ticTacToeboard[1, 0] == playerID && ticTacToeboard[2, 0] == playerID)
         || (ticTacToeboard[0,1] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[2, 1] == playerID)
         || (ticTacToeboard[0,2] == playerID && ticTacToeboard[1, 2] == playerID && ticTacToeboard[2, 2] == playerID)
@@ -141,7 +152,17 @@ public class TicTacToeManager : MonoBehaviour
 
     private void ResetGame()
     {
-
+        Debug.Log("Commence Game Reset");
+        for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
+        { 
+            for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
+            {
+                // set the tictactoe board to 0 to reset the value
+                // call the function to reset the board
+                ticTacToeboard[i, j] = 0;
+                Reset(i, j);
+            }
+        }
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
