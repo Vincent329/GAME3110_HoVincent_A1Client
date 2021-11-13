@@ -158,6 +158,11 @@ public class NetworkedClient : MonoBehaviour
             // might be a cleaner way to do this but this works
             ticTacToeManagerRef.ReceiveMessage(csv[1]);
         }
+        else if (signifier == ServerToClientSignifiers.NotifyOpponentWin)
+        {
+            Debug.Log("Opponent Has Won: " + csv[1]);
+
+        }
 
     }
 
@@ -190,5 +195,6 @@ public static class ServerToClientSignifiers
     public const int OpponentPlay = 5; // receiving the opponent's action
     public const int GameStart = 6;
     public const int SendMessage = 7;
+    public const int NotifyOpponentWin = 8; // notify to the opponent that there's a win
 
 }
