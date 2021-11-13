@@ -173,6 +173,11 @@ public class NetworkedClient : MonoBehaviour
 
             // reset button set active, send the notification to the opponent
         }
+        else if (signifier == ServerToClientSignifiers.GameReset)
+        {
+            Debug.Log("Opponent resets the game");
+            ticTacToeManagerRef.ResetGame();
+        }
 
     }
 

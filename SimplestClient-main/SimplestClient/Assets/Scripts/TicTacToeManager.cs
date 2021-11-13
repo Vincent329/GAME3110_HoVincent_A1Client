@@ -76,7 +76,7 @@ public class TicTacToeManager : MonoBehaviour
         }
 
         sendButton.onClick.AddListener(SendChatMessage);
-        resetButton.onClick.AddListener(ResetGame);
+        resetButton.onClick.AddListener(ResetButtonPrompt);
     }
 
     void Start()
@@ -150,7 +150,13 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
-    private void ResetGame()
+    private void ResetButtonPrompt()
+    {
+        ResetGame();
+        networkedClient.SendMessageToHost(ClientToServerSignifiers.ResetGame + "");
+    }
+
+    public void ResetGame()
     {
         Debug.Log("Commence Game Reset");
         for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
@@ -163,6 +169,7 @@ public class TicTacToeManager : MonoBehaviour
                 Reset(i, j);
             }
         }
+        
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
