@@ -1724,7 +1724,7 @@ GameObject:
   - component: {fileID: 693153366}
   - component: {fileID: 693153365}
   m_Layer: 5
-  m_Name: Reset Game
+  m_Name: Reset Game Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

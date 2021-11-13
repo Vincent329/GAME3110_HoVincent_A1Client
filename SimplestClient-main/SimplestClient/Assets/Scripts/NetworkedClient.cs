@@ -21,6 +21,7 @@ public class NetworkedClient : MonoBehaviour
     // All the gamesystemmanager needs to worry about is keeping track of states
     GameObject gameSystemManager;
 
+    // the tictactoe manager is where we're going to be referencing for any game specific calls
     TicTacToeManager ticTacToeManagerRef;
 
 
@@ -170,7 +171,7 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.NotifyOpponentWin)
         {
             Debug.Log("Opponent Has Won: " + csv[1]);
-
+            ticTacToeManagerRef.ActivateResetButton();
             // reset button set active, send the notification to the opponent
         }
         else if (signifier == ServerToClientSignifiers.GameReset)

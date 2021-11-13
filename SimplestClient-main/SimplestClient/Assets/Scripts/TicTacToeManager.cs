@@ -69,7 +69,8 @@ public class TicTacToeManager : MonoBehaviour
             if (tempButton.gameObject.name == "Send Message Button")
             {
                 sendButton = tempButton;
-            } else if (tempButton.gameObject.name == "Reset Game Button")
+            } 
+            else if (tempButton.gameObject.name == "Reset Game Button")
             {
                 resetButton = tempButton;
             }
@@ -77,6 +78,8 @@ public class TicTacToeManager : MonoBehaviour
 
         sendButton.onClick.AddListener(SendChatMessage);
         resetButton.onClick.AddListener(ResetButtonPrompt);
+
+        resetButton.gameObject.SetActive(false);
     }
 
     void Start()
@@ -89,6 +92,11 @@ public class TicTacToeManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ActivateResetButton()
+    {
+        resetButton.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -109,8 +117,9 @@ public class TicTacToeManager : MonoBehaviour
         if (CheckWinCondition())
         {
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
+            ActivateResetButton();
             // set buttons to 0
-        } 
+        }
     }
     
     /// <summary>
@@ -169,7 +178,8 @@ public class TicTacToeManager : MonoBehaviour
                 Reset(i, j);
             }
         }
-        
+        resetButton.gameObject.SetActive(false);
+
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
