@@ -147,7 +147,6 @@ public class NetworkedClient : MonoBehaviour
         }
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
-            Debug.Log("Opponent Play");
             // receive actions from the opponent
             ticTacToeManagerRef.OpponentPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
         }
@@ -178,6 +177,10 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Opponent resets the game");
             ticTacToeManagerRef.ResetGame();
+        }
+        else if (signifier == ServerToClientSignifiers.ChangeTurn)
+        {
+            Debug.Log("Player " + csv[1] + "'s turn");
         }
 
     }
@@ -211,12 +214,10 @@ public static class ServerToClientSignifiers
     public const int LoginFailed = 2;
     public const int AccountCreationComplete = 3;
     public const int AccountCreationFailed = 4;
-
-    public const int OpponentPlay = 5; // receiving the opponent's action
+    public const int OpponentPlay = 5; // once player makes an action, send an action back to the receiver client
     public const int GameStart = 6;
     public const int SendMessage = 7;
     public const int NotifyOpponentWin = 8; // notify to the opponent that there's a win
-    public const int GameReset = 9;
-
+    public const int ChangeTurn = 9;
+    public const int GameReset = 10;
 }
-

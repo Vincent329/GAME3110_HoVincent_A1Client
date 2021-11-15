@@ -17,7 +17,6 @@ public class TicTacToeManager : MonoBehaviour
     // player variables
     // if current turn is not equal to the player ID, then it's not the player's turn to move
     [SerializeField] private int playerID;
-    public int currentTurn;
 
     // TODO:
     // on game start, assign the correct player ID as either 1 or 2
@@ -34,7 +33,7 @@ public class TicTacToeManager : MonoBehaviour
     InputField chatInputField;
     Button sendButton, resetButton;
 
-
+    // --------------------EVENTS-----------------------------------------
     // multicast delegate to search for the proper button appllied
     public delegate void SearchButton(int row, int column, int opponentID);
     public event SearchButton Search;
@@ -42,12 +41,33 @@ public class TicTacToeManager : MonoBehaviour
     public delegate void ResetButton(int row, int column);
     public event ResetButton Reset;
 
+    public delegate void DelegateTurn(int playerTurn);
+    public event DelegateTurn NextTurn;
+
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
 
     // Game Variables... need to use this to delegate the turn order
+    // Purpose: flips between 1 and 2
     [SerializeField] private int playerTurn;
-    
+    public int PlayerTurn
+    {
+        get => playerTurn;
+        set
+        {
+            playerTurn = value;
+        }
+    }
+
+    [SerializeField] bool finishedPlaying;
+    public bool FinishedPlaying
+    {
+        get => finishedPlaying;
+        set
+        {
+            finishedPlaying = value;
+        }
+    }
     /// <summary>
     /// The moment this manager turns on, go through any and all possible items
     /// </summary>
@@ -78,7 +98,6 @@ public class TicTacToeManager : MonoBehaviour
 
         sendButton.onClick.AddListener(SendChatMessage);
         resetButton.onClick.AddListener(ResetButtonPrompt);
-
         resetButton.gameObject.SetActive(false);
     }
 
@@ -100,16 +119,16 @@ public class TicTacToeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Once received message from the network client, update the board with the index of the current player at that row and column
+    /// Called from Button data at the specific row and column assigned, 
+    /// the purpose of this function is to send information of the player's action to the server
     /// </summary>
     /// <param name="row"></param>
     /// <param name="column"></param>
     /// <param name="currentPlayer"></param>
     public void PlacePosition(int row, int column, int currentPlayer)
     {
-       
+        
         ticTacToeboard[row, column] = currentPlayer;
-        Debug.Log(ticTacToeboard[row, column]);
         networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerAction + "," + row + "," + column + "," + playerID);
         // TODO:
         // send to the server
@@ -121,9 +140,9 @@ public class TicTacToeManager : MonoBehaviour
             // set buttons to 0
         }
     }
-    
+
     /// <summary>
-    /// Specific function for when we're receiving actions from the opponent
+    /// Once received message from the network client, update the board with the index of the OPPONENT player at that row and column
     /// </summary>
     /// <param name="row"></param>
     /// <param name="column"></param>
