@@ -193,6 +193,9 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Joining in Midway");
             // TO DO: DEACTIVATE THE BOARD BUT UPDATE CURRENTLY OCCUPIED SPACES
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
+            ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
+
         } 
         else if (signifier == ServerToClientSignifiers.UpdateSpectator)
         {
