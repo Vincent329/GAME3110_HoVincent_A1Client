@@ -172,6 +172,7 @@ public class NetworkedClient : MonoBehaviour
             // turn off the buttons so that no one can input in anymore
 
             ticTacToeManagerRef.ActivateResetButton();
+            ticTacToeManagerRef.GameOverOnWin();
             // reset button set active, send the notification to the opponent
         }
         else if (signifier == ServerToClientSignifiers.GameReset)

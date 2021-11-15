@@ -32,6 +32,7 @@ public class ButtonData : MonoBehaviour
         ticTacToeManagerRef.Search += SetButtonAtLocation;
         ticTacToeManagerRef.Reset += ReactivateButtonOnReset;
         ticTacToeManagerRef.NextTurn += ButtonOnTurnChange;
+        ticTacToeManagerRef.Deactivate += DeactivateButton;
     }
 
     // Update is called once per frame
@@ -47,6 +48,7 @@ public class ButtonData : MonoBehaviour
         //buttonComp.interactable = false;
         // check the manager ref if the icon is filled first
 
+        // if the button ISN'T occupied on the board
         if (!CheckIfOccupied())
         {
             SetButtonAtLocation(XPos, YPos, ticTacToeManagerRef.PlayerID);
@@ -80,6 +82,12 @@ public class ButtonData : MonoBehaviour
         }
     }
 
+  
+
+    /// <summary>
+    /// Function to return the condition if the button on the grid is occupied
+    /// </summary>
+    /// <returns></returns>
     private bool CheckIfOccupied()
     {
         if (ticTacToeManagerRef.GetTicTacToeBoard[XPos, YPos] >= 1) // if it's 1 or higher, then the spot is already occupied
@@ -121,5 +129,10 @@ public class ButtonData : MonoBehaviour
                 buttonComp.interactable = false;
             }
         }
+    }
+
+    private void DeactivateButton(int row, int column)
+    {
+        buttonComp.interactable = false;
     }
 }

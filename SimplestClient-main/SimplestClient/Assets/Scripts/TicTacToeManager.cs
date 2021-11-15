@@ -41,9 +41,14 @@ public class TicTacToeManager : MonoBehaviour
     // multicast delegate for all the buttons to be reset upon game restart
     public delegate void ResetButton(int row, int column);
     public event ResetButton Reset;
+    
+    // multicast delegate for all the buttons to be reset upon game restart
+    public delegate void DeactivateBoard(int row, int column);
+    public event DeactivateBoard Deactivate;
 
     public delegate void DelegateTurn(int row, int column, int checkTurn);
     public event DelegateTurn NextTurn;
+
 
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
@@ -159,6 +164,7 @@ public class TicTacToeManager : MonoBehaviour
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
             ActivateResetButton();
             // set buttons to 0
+            
         } else
         {
             CheckDraw();
@@ -193,8 +199,8 @@ public class TicTacToeManager : MonoBehaviour
         || (ticTacToeboard[0,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[2, 2] == playerID)
         || (ticTacToeboard[2,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[0, 2] == playerID))
         {
-            Debug.Log("Player " + playerID + " wins");
-            textDisplay.text = "Player " + playerID + " wins";
+            //Debug.Log("Player " + playerID + " wins");
+            //textDisplay.text = "Player " + playerID + " wins";
             return true;
         }
         return false;
@@ -231,6 +237,20 @@ public class TicTacToeManager : MonoBehaviour
         }
         playerTurn = 1; // reset player turn
         resetButton.gameObject.SetActive(false);
+    }
+
+    public void GameOverOnWin()
+    {
+        for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
+        {
+            for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
+            {
+                if (ticTacToeboard[i, j] == 0)
+                {
+                    Deactivate(i, j);
+                }
+            }
+        }
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
