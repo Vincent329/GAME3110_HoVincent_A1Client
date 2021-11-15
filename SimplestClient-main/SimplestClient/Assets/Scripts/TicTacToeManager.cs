@@ -38,10 +38,11 @@ public class TicTacToeManager : MonoBehaviour
     public delegate void SearchButton(int row, int column, int opponentID);
     public event SearchButton Search;
 
+    // multicast delegate for all the buttons to be reset upon game restart
     public delegate void ResetButton(int row, int column);
     public event ResetButton Reset;
 
-    public delegate void DelegateTurn(int playerTurn);
+    public delegate void DelegateTurn(int row, int column, int checkTurn);
     public event DelegateTurn NextTurn;
 
     // just to check if the network client is functional
@@ -113,6 +114,24 @@ public class TicTacToeManager : MonoBehaviour
         
     }
 
+    public void CheckTurn(int currentTurn)
+    {
+        //if (playerID == currentTurn)
+        //{
+        //    Debug.Log("Player " + currentTurn + " turn");
+        //}
+        for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
+        {
+            for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
+            {
+                if (ticTacToeboard[i, j] == 0)
+                {
+                    NextTurn(i, j, currentTurn);
+                }
+            }
+        }
+    }
+
     public void ActivateResetButton()
     {
         resetButton.gameObject.SetActive(true);
@@ -129,6 +148,8 @@ public class TicTacToeManager : MonoBehaviour
     {
         
         ticTacToeboard[row, column] = currentPlayer;
+        // check if we've hit a draw
+
         networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerAction + "," + row + "," + column + "," + playerID);
         // TODO:
         // send to the server
@@ -138,6 +159,9 @@ public class TicTacToeManager : MonoBehaviour
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
             ActivateResetButton();
             // set buttons to 0
+        } else
+        {
+            CheckDraw();
         }
     }
 
@@ -151,8 +175,10 @@ public class TicTacToeManager : MonoBehaviour
     {
         // assign the player
         ticTacToeboard[row, column] = opponentPlayer;
+        // check if the board is full
         // call the event
         Search(row, column, opponentPlayer);
+        CheckDraw();
     }
 
     private bool CheckWinCondition()
@@ -171,17 +197,23 @@ public class TicTacToeManager : MonoBehaviour
             textDisplay.text = "Player " + playerID + " wins";
             return true;
         }
-        else
-        {
-            // switch player turn
-            return false;
-        }
+        return false;
     }
 
     private void ResetButtonPrompt()
     {
         ResetGame();
         networkedClient.SendMessageToHost(ClientToServerSignifiers.ResetGame + "");
+    }
+
+    public void CheckDraw()
+    {
+        // check draw here
+        playerTurn++;
+        if (playerTurn > 9) // tic tac toe has a max of 9 turns
+        {
+            ActivateResetButton();
+        }
     }
 
     public void ResetGame()
@@ -197,8 +229,8 @@ public class TicTacToeManager : MonoBehaviour
                 Reset(i, j);
             }
         }
+        playerTurn = 1; // reset player turn
         resetButton.gameObject.SetActive(false);
-
     }
 
     // ---------------- CHAT FUNCTIONALITY -------------------------------------

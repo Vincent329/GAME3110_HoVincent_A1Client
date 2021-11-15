@@ -155,9 +155,8 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
+            ticTacToeManagerRef.PlayerTurn = 1;
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
-
-            // over here, assign the player ID value as well
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
         {
@@ -170,6 +169,8 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.NotifyOpponentWin)
         {
             Debug.Log("Opponent Has Won: " + csv[1]);
+            // turn off the buttons so that no one can input in anymore
+
             ticTacToeManagerRef.ActivateResetButton();
             // reset button set active, send the notification to the opponent
         }
@@ -180,7 +181,9 @@ public class NetworkedClient : MonoBehaviour
         }
         else if (signifier == ServerToClientSignifiers.ChangeTurn)
         {
-            Debug.Log("Player " + csv[1] + "'s turn");
+            ticTacToeManagerRef.CheckTurn(int.Parse(csv[1]));
+
+
         }
 
     }

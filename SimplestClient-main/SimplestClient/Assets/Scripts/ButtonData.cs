@@ -30,7 +30,8 @@ public class ButtonData : MonoBehaviour
         buttonComp.onClick.AddListener(OnButtonClicked);
         ticTacToeManagerRef = FindObjectOfType<TicTacToeManager>();
         ticTacToeManagerRef.Search += SetButtonAtLocation;
-        ticTacToeManagerRef.Reset += ReactivateButtonAtLocation;
+        ticTacToeManagerRef.Reset += ReactivateButtonOnReset;
+        ticTacToeManagerRef.NextTurn += ButtonOnTurnChange;
     }
 
     // Update is called once per frame
@@ -56,7 +57,13 @@ public class ButtonData : MonoBehaviour
         // check active buttons?
     }
 
-    // just to set up a visual
+    /// <summary>
+    /// Sets up a visual representation of the selected button, whether or not the player has pressed it.
+    /// upon opponent's selection, a delegate will be called with the opponent's selected row and column
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="column"></param>
+    /// <param name="playerID"></param>
     private void SetButtonAtLocation(int row, int column, int playerID)
     {
         if (row == XPos && column == YPos)
@@ -86,12 +93,33 @@ public class ButtonData : MonoBehaviour
 
     // run through for all tic tac toe buttons.
     // call via tic tac toe manager
-    public void ReactivateButtonAtLocation(int row, int column)
+    public void ReactivateButtonOnReset(int row, int column)
     {
         if (row == XPos && column == YPos)
         {
             buttonComp.transform.GetChild(0).GetComponent<Text>().text = ""; // test
             buttonComp.interactable = true;
+        }
+    }
+
+    /// <summary>
+    /// Reactivate any buttons that haven't been selected yet on player's turn
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="column"></param>
+    /// <param name="turnArgument"></param>
+    public void ButtonOnTurnChange(int row, int column, int turnArgument)
+    {
+        if (row == XPos && column == YPos)
+        {
+            if (ticTacToeManagerRef.PlayerID == turnArgument)
+            {
+                
+                buttonComp.interactable = true;
+            } else
+            {
+                buttonComp.interactable = false;
+            }
         }
     }
 }
