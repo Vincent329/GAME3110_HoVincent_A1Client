@@ -34,27 +34,26 @@ public class TicTacToeManager : MonoBehaviour
     Button sendButton, resetButton;
 
     // --------------------EVENTS-----------------------------------------
-    // multicast delegate to search for the proper button appllied
+    // multi-cast delegate to search for the proper button appllied
     public delegate void SearchButton(int row, int column, int opponentID);
     public event SearchButton Search;
 
-    // multicast delegate for all the buttons to be reset upon game restart
+    // multi-cast delegate for all the buttons to be reset upon game restart
     public delegate void ResetButton(int row, int column);
     public event ResetButton Reset;
     
-    // multicast delegate for all the buttons to be reset upon game restart
+    // multi-cast delegate for all the buttons to be reset upon game restart
     public delegate void DeactivateBoard(int row, int column);
     public event DeactivateBoard Deactivate;
 
     public delegate void DelegateTurn(int row, int column, int checkTurn);
     public event DelegateTurn NextTurn;
 
-
     // just to check if the network client is functional
     [SerializeField] NetworkedClient networkedClient;
 
-    // Game Variables... need to use this to delegate the turn order
-    // Purpose: flips between 1 and 2
+    // Game Variables... need to use this to determine a draw
+    // Purpose: counts from 1 to 9, upon 9, it's a reset
     [SerializeField] private int playerTurn;
     public int PlayerTurn
     {
@@ -79,7 +78,7 @@ public class TicTacToeManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        // hope this works
+        // finds the client object for communication to the server
         networkedClient = GameObject.FindObjectOfType<NetworkedClient>();
 
         InputField[] allInputFields = FindObjectsOfType<InputField>();
@@ -119,12 +118,12 @@ public class TicTacToeManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Goes through the board to reactivate the board for the player with the next turn
+    /// </summary>
+    /// <param name="currentTurn"></param>
     public void CheckTurn(int currentTurn)
     {
-        //if (playerID == currentTurn)
-        //{
-        //    Debug.Log("Player " + currentTurn + " turn");
-        //}
         for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
         {
             for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
@@ -137,6 +136,9 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Any point whether we either win, lose, or draw, activate the reset game button
+    /// </summary>
     public void ActivateResetButton()
     {
         resetButton.gameObject.SetActive(true);
@@ -153,7 +155,6 @@ public class TicTacToeManager : MonoBehaviour
     {
         
         ticTacToeboard[row, column] = currentPlayer;
-        // check if we've hit a draw
 
         networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerAction + "," + row + "," + column + "," + playerID);
         // TODO:
@@ -163,9 +164,9 @@ public class TicTacToeManager : MonoBehaviour
         {
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
             ActivateResetButton();
-            // set buttons to 0
-            
-        } else
+        }
+        // check if we've hit a draw
+        else
         {
             CheckDraw();
         }
@@ -184,9 +185,14 @@ public class TicTacToeManager : MonoBehaviour
         // check if the board is full
         // call the event
         Search(row, column, opponentPlayer);
-        CheckDraw();
+        
+        CheckDraw(); // increment the turn counter
     }
 
+    /// <summary>
+    /// Checks possible win conditions
+    /// </summary>
+    /// <returns></returns>
     private bool CheckWinCondition()
     {
         // search all possible win conditions
@@ -218,10 +224,13 @@ public class TicTacToeManager : MonoBehaviour
         playerTurn++;
         if (playerTurn > 9) // tic tac toe has a max of 9 turns
         {
-            ActivateResetButton();
+            ActivateResetButton(); // turn on the reset button
         }
     }
 
+    /// <summary>
+    /// Resets the game board, goes through the array and resets values as well as the button attached to that array location
+    /// </summary>
     public void ResetGame()
     {
         Debug.Log("Commence Game Reset");
@@ -230,7 +239,7 @@ public class TicTacToeManager : MonoBehaviour
             for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
             {
                 // set the tictactoe board to 0 to reset the value
-                // call the function to reset the board
+                // call the delegate to reset the button at that specific location
                 ticTacToeboard[i, j] = 0;
                 Reset(i, j);
             }

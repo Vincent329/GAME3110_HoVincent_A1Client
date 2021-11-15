@@ -155,7 +155,7 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
-            ticTacToeManagerRef.PlayerTurn = 1;
+            ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
@@ -182,8 +182,26 @@ public class NetworkedClient : MonoBehaviour
         }
         else if (signifier == ServerToClientSignifiers.ChangeTurn)
         {
+            // ideally, functionality should only work between players 1 and 2
+            // 3 and upwards will not have any prompts to interact with the buttons
             ticTacToeManagerRef.CheckTurn(int.Parse(csv[1]));
+        }
 
+        // ---------------- RECEIVING FOR SPECTATORS ----------------------
+
+        else if (signifier == ServerToClientSignifiers.MidwayJoin)
+        {
+            Debug.Log("Joining in Midway");
+            // TO DO: DEACTIVATE THE BOARD BUT UPDATE CURRENTLY OCCUPIED SPACES
+        } 
+        else if (signifier == ServerToClientSignifiers.UpdateSpectator)
+        {
+            Debug.Log("Updating from player turn action");
+
+        }
+        else if (signifier == ServerToClientSignifiers.ResetSpectator)
+        {
+            Debug.Log("Reset board");
 
         }
 
@@ -224,4 +242,7 @@ public static class ServerToClientSignifiers
     public const int NotifyOpponentWin = 8; // notify to the opponent that there's a win
     public const int ChangeTurn = 9;
     public const int GameReset = 10;
+    public const int MidwayJoin = 11;
+    public const int UpdateSpectator = 12;
+    public const int ResetSpectator = 13;
 }

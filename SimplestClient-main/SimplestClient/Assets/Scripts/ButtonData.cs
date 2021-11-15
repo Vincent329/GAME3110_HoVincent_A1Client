@@ -26,9 +26,14 @@ public class ButtonData : MonoBehaviour
 
     void Start()
     {
+        // the button component
         buttonComp = GetComponent<Button>();
         buttonComp.onClick.AddListener(OnButtonClicked);
+
+        // find the board
         ticTacToeManagerRef = FindObjectOfType<TicTacToeManager>();
+
+        // -------------- ATTACHING DELEGATES -------------------------
         ticTacToeManagerRef.Search += SetButtonAtLocation;
         ticTacToeManagerRef.Reset += ReactivateButtonOnReset;
         ticTacToeManagerRef.NextTurn += ButtonOnTurnChange;
@@ -41,11 +46,12 @@ public class ButtonData : MonoBehaviour
         // keep updating???
     }
 
-
+    /// <summary>
+    /// Should the player click a button, assign the ID
+    /// </summary>
     private void OnButtonClicked()
     {
         Debug.Log(XPos + "," + YPos);
-        //buttonComp.interactable = false;
         // check the manager ref if the icon is filled first
 
         // if the button ISN'T occupied on the board
@@ -53,7 +59,7 @@ public class ButtonData : MonoBehaviour
         {
             SetButtonAtLocation(XPos, YPos, ticTacToeManagerRef.PlayerID);
 
-            // NOTIFIES THE TICTACTOE MANAGER THAT WE'RE PLACING A POSITION
+            // NOTIFIES THE TICTACTOE MANAGER THAT WE'RE PLACING A POSITION WITH THE CURRENT ID
             ticTacToeManagerRef.PlacePosition(XPos, YPos, ticTacToeManagerRef.PlayerID);
         }
         // check active buttons?
@@ -72,11 +78,11 @@ public class ButtonData : MonoBehaviour
         {
             if (playerID == 1)
             {
-                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; // test
+                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "O"; 
             }
-            else
+            else if (playerID == 2)
             {
-                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "X"; // test
+                buttonComp.transform.GetChild(0).GetComponent<Text>().text = "X"; 
             }
             buttonComp.interactable = false;
         }
@@ -112,20 +118,24 @@ public class ButtonData : MonoBehaviour
 
     /// <summary>
     /// Reactivate any buttons that haven't been selected yet on player's turn
+    /// Ideally, shouldn't work for spectators, but you have to make sure that the spectator can't activate the board
     /// </summary>
     /// <param name="row"></param>
     /// <param name="column"></param>
     /// <param name="turnArgument"></param>
     public void ButtonOnTurnChange(int row, int column, int turnArgument)
     {
+        // if the button exests on this board
         if (row == XPos && column == YPos)
         {
+            // if the turn argument is on the playerID
             if (ticTacToeManagerRef.PlayerID == turnArgument)
-            {
-                
+            {              
+                // activate the button
                 buttonComp.interactable = true;
             } else
             {
+                // otherwise deactivate the button
                 buttonComp.interactable = false;
             }
         }
