@@ -195,12 +195,12 @@ public class NetworkedClient : MonoBehaviour
             // TO DO: DEACTIVATE THE BOARD BUT UPDATE CURRENTLY OCCUPIED SPACES
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
-
+            ticTacToeManagerRef.SpectatorShutdown();
         } 
         else if (signifier == ServerToClientSignifiers.UpdateSpectator)
         {
             Debug.Log("Updating from player turn action");
-
+            ticTacToeManagerRef.SpectatorUpdate(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
         }
         else if (signifier == ServerToClientSignifiers.ResetSpectator)
         {

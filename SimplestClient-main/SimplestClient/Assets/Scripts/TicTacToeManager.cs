@@ -262,6 +262,37 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
+    // ------------------ SPECTATOR FUNCTIONALITY -------------------
+
+    /// <summary>
+    /// if the player's a spectator, shut down all the functionality of the board
+    /// </summary>
+    public void SpectatorShutdown()
+    {
+        for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
+        {
+            for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
+            {             
+                Deactivate(i, j);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Simply update the board for the spectator
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="column"></param>
+    /// <param name="player"></param>
+    public void SpectatorUpdate(int row, int column, int player)
+    {
+        // assign the player
+        ticTacToeboard[row, column] = player;
+        // check if the board is full
+        // call the event
+        Search(row, column, player);
+    }
+
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
 
     /// <summary>
