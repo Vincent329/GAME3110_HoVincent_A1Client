@@ -205,6 +205,7 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.ResetSpectator)
         {
             Debug.Log("Reset board");
+            ticTacToeManagerRef.ResetButtons();
 
         }
 

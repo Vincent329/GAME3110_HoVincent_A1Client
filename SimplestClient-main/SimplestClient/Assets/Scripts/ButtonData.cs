@@ -112,7 +112,10 @@ public class ButtonData : MonoBehaviour
         if (row == XPos && column == YPos)
         {
             buttonComp.transform.GetChild(0).GetComponent<Text>().text = ""; // test
-            buttonComp.interactable = true;
+            if (ticTacToeManagerRef.PlayerID <= 2)
+            {
+                buttonComp.interactable = true;
+            }
         }
     }
 

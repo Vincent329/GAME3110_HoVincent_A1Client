@@ -228,14 +228,23 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Resets the game board, goes through the array and resets values as well as the button attached to that array location
     /// </summary>
     public void ResetGame()
     {
         Debug.Log("Commence Game Reset");
+        ResetButtons();
+
+        playerTurn = 1; // reset player turn
+        resetButton.gameObject.SetActive(false);
+    }
+
+    public void ResetButtons()
+    {
         for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
-        { 
+        {
             for (int j = 0; j < ticTacToeboard.GetLength(1); j++)
             {
                 // set the tictactoe board to 0 to reset the value
@@ -244,10 +253,7 @@ public class TicTacToeManager : MonoBehaviour
                 Reset(i, j);
             }
         }
-        playerTurn = 1; // reset player turn
-        resetButton.gameObject.SetActive(false);
     }
-
     public void GameOverOnWin()
     {
         for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
