@@ -157,6 +157,8 @@ public class NetworkedClient : MonoBehaviour
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
             ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
+
+            // TO-DO: on TicTacToe Start, retrieve the list of replays from the server
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
         {

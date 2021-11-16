@@ -87,7 +87,6 @@ public class ButtonData : MonoBehaviour
             buttonComp.interactable = false;
         }
     }
-
   
 
     /// <summary>

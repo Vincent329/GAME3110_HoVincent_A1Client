@@ -64,15 +64,10 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
-    [SerializeField] bool finishedPlaying;
-    public bool FinishedPlaying
-    {
-        get => finishedPlaying;
-        set
-        {
-            finishedPlaying = value;
-        }
-    }
+    // ----------- REPLAY LIST ---------------
+    private List<string> localListofReplays;
+    [SerializeField] Dropdown replayDropdownList;
+        
     /// <summary>
     /// The moment this manager turns on, go through any and all possible items
     /// </summary>
@@ -101,9 +96,28 @@ public class TicTacToeManager : MonoBehaviour
             }
         }
 
+        Dropdown[] allDropdownBoxes = FindObjectsOfType<Dropdown>();
+        foreach (Dropdown tempDrop in allDropdownBoxes)
+        {
+            if (tempDrop.gameObject.name == "Replay List")
+            {
+                replayDropdownList = tempDrop;
+            }
+        }
+
         sendButton.onClick.AddListener(SendChatMessage);
         resetButton.onClick.AddListener(ResetButtonPrompt);
         resetButton.gameObject.SetActive(false);
+
+        //// replay list dropdown
+        
+        // clean the list on first entry
+        replayDropdownList.options.Clear();
+        
+        //replayDropdownList.onValueChanged.AddListener(delegate
+        //{ LoadReplayDropDownChanged();
+
+        //});
     }
 
     void Start()
