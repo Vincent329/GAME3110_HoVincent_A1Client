@@ -31,7 +31,7 @@ public class TicTacToeManager : MonoBehaviour
 
     public Text textDisplay;
     InputField chatInputField;
-    Button sendButton, resetButton;
+    Button sendButton, resetButtonTrigger;
 
     // --------------------EVENTS-----------------------------------------
     // multi-cast delegate to search for the proper button appllied
@@ -64,7 +64,7 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
-    // ----------- REPLAY LIST ---------------
+    // ------------------------ REPLAY LIST --------------------------------
     private List<string> localListofReplays;
     [SerializeField] Dropdown replayDropdownList;
         
@@ -92,7 +92,8 @@ public class TicTacToeManager : MonoBehaviour
             } 
             else if (tempButton.gameObject.name == "Reset Game Button")
             {
-                resetButton = tempButton;
+                resetButtonTrigger = tempButton;
+                Debug.Log("Found Reset Button");
             }
         }
 
@@ -106,16 +107,16 @@ public class TicTacToeManager : MonoBehaviour
         }
 
         sendButton.onClick.AddListener(SendChatMessage);
-        resetButton.onClick.AddListener(ResetButtonPrompt);
-        resetButton.gameObject.SetActive(false);
+        resetButtonTrigger.onClick.RemoveAllListeners();
+        resetButtonTrigger.onClick.AddListener(ResetButtonPrompt);
+        //resetButton.gameObject.SetActive(false);
 
         //// replay list dropdown
-        
+        localListofReplays = new List<string>();
         // clean the list on first entry
         replayDropdownList.options.Clear();
-        
-        //replayDropdownList.onValueChanged.AddListener(delegate
-        //{ LoadReplayDropDownChanged();
+
+        replayDropdownList.onValueChanged.AddListener(delegate { LoadReplayDropDownChanged(replayDropdownList); });
 
         //});
     }
@@ -155,7 +156,7 @@ public class TicTacToeManager : MonoBehaviour
     /// </summary>
     public void ActivateResetButton()
     {
-        resetButton.gameObject.SetActive(true);
+        resetButtonTrigger.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -226,12 +227,19 @@ public class TicTacToeManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Event when the reset button gets chosen
+    /// </summary>
     private void ResetButtonPrompt()
     {
         ResetGame();
         networkedClient.SendMessageToHost(ClientToServerSignifiers.ResetGame + "");
+        Debug.Log("Reset finish");
     }
 
+    /// <summary>
+    /// Checks for the draw
+    /// </summary>
     public void CheckDraw()
     {
         // check draw here
@@ -248,11 +256,10 @@ public class TicTacToeManager : MonoBehaviour
     /// </summary>
     public void ResetGame()
     {
-        Debug.Log("Commence Game Reset");
         ResetButtons();
 
         playerTurn = 1; // reset player turn
-        resetButton.gameObject.SetActive(false);
+        //resetButton.gameObject.SetActive(false);
     }
 
     public void ResetButtons()
@@ -268,6 +275,10 @@ public class TicTacToeManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Deactivates Buttons attached with ButtonData component
+    /// </summary>
     public void GameOverOnWin()
     {
         for (int i = 0; i < ticTacToeboard.GetLength(0); i++)
@@ -281,8 +292,21 @@ public class TicTacToeManager : MonoBehaviour
             }
         }
     }
+    #region Functionality for Replay Dropdown list
+    public void AddToDropdownMenu(int index, string replayName)
+    {
+        localListofReplays.Add(replayName);
+        replayDropdownList.options.Add(new Dropdown.OptionData() { text = replayName });
+    }
 
-    // ------------------ SPECTATOR FUNCTIONALITY -------------------
+    private void LoadReplayDropDownChanged(Dropdown dropdown)
+    {
+        // send to the network that we request a replay
+        networkedClient.SendMessageToHost(ClientToServerSignifiers.RequestReplay + "," + dropdown.value);
+    }
+
+    #endregion 
+    #region // ------------------ SPECTATOR FUNCTIONALITY -------------------
 
     /// <summary>
     /// if the player's a spectator, shut down all the functionality of the board
@@ -313,6 +337,7 @@ public class TicTacToeManager : MonoBehaviour
         Search(row, column, player);
     }
 
+    #endregion
     // ---------------- CHAT FUNCTIONALITY -------------------------------------
 
     /// <summary>
@@ -327,4 +352,5 @@ public class TicTacToeManager : MonoBehaviour
     {
         textDisplay.text = message;
     }
+
 }

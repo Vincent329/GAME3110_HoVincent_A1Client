@@ -181,6 +181,8 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Opponent resets the game");
             ticTacToeManagerRef.ResetGame();
+
+            // add to the list of dropdowns
         }
         else if (signifier == ServerToClientSignifiers.ChangeTurn)
         {
@@ -188,7 +190,13 @@ public class NetworkedClient : MonoBehaviour
             // 3 and upwards will not have any prompts to interact with the buttons
             ticTacToeManagerRef.CheckTurn(int.Parse(csv[1]));
         }
+        else if (signifier == ServerToClientSignifiers.UpdateReplayList)
+        {
+            Debug.Log("Action: " + csv[1] + "," + csv[2]);
+            ticTacToeManagerRef.AddToDropdownMenu(int.Parse(csv[1]), csv[2]);
+        }
 
+        #region Spectator Specific functionality
         // ---------------- RECEIVING FOR SPECTATORS ----------------------
 
         else if (signifier == ServerToClientSignifiers.MidwayJoin)
@@ -210,7 +218,7 @@ public class NetworkedClient : MonoBehaviour
             ticTacToeManagerRef.ResetButtons();
 
         }
-
+        #endregion
     }
 
     public bool IsConnected()
@@ -228,10 +236,14 @@ public static class ClientToServerSignifiers
     public const int Login = 2;
     public const int WaitingToJoinGameRoom = 3;
     public const int TicTacToe = 4;
+
+    // Game process actions
     public const int PlayerAction = 5;
     public const int SendPresetMessage = 6;
     public const int PlayerWins = 7;
     public const int ResetGame = 8;
+
+    // Replay System functionality
     public const int LogAction = 9;
     public const int RequestReplay = 10;
 
@@ -248,7 +260,14 @@ public static class ServerToClientSignifiers
     public const int NotifyOpponentWin = 8; // notify to the opponent that there's a win
     public const int ChangeTurn = 9;
     public const int GameReset = 10;
+
+    // spectator functions
     public const int MidwayJoin = 11;
     public const int UpdateSpectator = 12;
     public const int ResetSpectator = 13;
+
+    // replay functionality
+    public const int ProcessReplay = 14;
+    public const int UpdateReplayList = 15;
+    public const int EndReplay = 16; // specific case to end a replay when we're done running through the list so that the clients can reset the board
 }
