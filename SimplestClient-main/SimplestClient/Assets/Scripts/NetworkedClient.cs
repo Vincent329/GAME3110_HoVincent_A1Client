@@ -158,7 +158,13 @@ public class NetworkedClient : MonoBehaviour
             ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
 
-            // TO-DO: on TicTacToe Start, retrieve the list of replays from the server
+            if (ticTacToeManagerRef.PlayerID == 1)
+                ticTacToeManagerRef.IDDisplay.text = "Player: O"; 
+            else if (ticTacToeManagerRef.PlayerID == 2)
+                ticTacToeManagerRef.IDDisplay.text = "Player: X";
+            else
+                ticTacToeManagerRef.IDDisplay.text = "Spectator";
+
         }
         else if (signifier == ServerToClientSignifiers.SendMessage)
         {

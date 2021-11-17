@@ -27,7 +27,7 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
-    public Text textDisplay;
+    public Text textDisplay, IDDisplay;
     InputField chatInputField;
     Button sendButton, resetButtonTrigger, saveReplayButton;
 
@@ -63,7 +63,6 @@ public class TicTacToeManager : MonoBehaviour
     }
 
     // ------------------------ REPLAY LIST --------------------------------
-    private List<string> localListofReplays;
     [SerializeField] Dropdown replayDropdownList;
 
     // flips on if replay is happening
@@ -130,8 +129,6 @@ public class TicTacToeManager : MonoBehaviour
         resetButtonTrigger.gameObject.SetActive(false);
         saveReplayButton.gameObject.SetActive(false);
 
-        //// replay list dropdown
-        localListofReplays = new List<string>();
         // clean the list on first entry
         replayDropdownList.options.Clear();
         replayDropdownList.onValueChanged.RemoveAllListeners();
@@ -270,7 +267,7 @@ public class TicTacToeManager : MonoBehaviour
         || (ticTacToeboard[2,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[0, 2] == playerID))
         {
             //Debug.Log("Player " + playerID + " wins");
-            //textDisplay.text = "Player " + playerID + " wins";
+            textDisplay.text = "Player " + playerID + " wins";
             return true;
         }
         return false;
@@ -344,7 +341,6 @@ public class TicTacToeManager : MonoBehaviour
     #region Functionality for Replay Dropdown list
     public void AddToDropdownMenu(int index, string replayName)
     {
-        localListofReplays.Add(replayName);
         replayDropdownList.options.Add(new Dropdown.OptionData() { text = replayName });
     }
 
