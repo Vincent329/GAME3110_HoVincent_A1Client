@@ -49,7 +49,11 @@ public class LazyProfessorClient : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.W))
             SendMessageToHost(ClientToServerTransferSignifiers.SubmitNetworkedClientGitRepoLink + ",https://github.com/Vincent329/GAME3110_HoVincent_A1Client");
         else if (Input.GetKeyDown(KeyCode.O))
-            SendMessageToHost(ClientToServerTransferSignifiers.SubmitNetworkedServerGitRepoLink + ",https://github.com/Vincent329/GAME3110_HoVincent_A1Server");
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitNetworkedServerGitRepoLink + ",https://github.com/Vincent329/GAME3110_HoVincent_A1Server"); 
+        else if (Input.GetKeyDown(KeyCode.F))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitFirstName + ",Vincent");
+        else if (Input.GetKeyDown(KeyCode.G))
+            SendMessageToHost(ClientToServerTransferSignifiers.SubmitLastName + ",Ho");
 
         UpdateNetworkConnection();
     }
