@@ -31,7 +31,7 @@ public class TicTacToeManager : MonoBehaviour
 
     public Text textDisplay;
     InputField chatInputField;
-    Button sendButton, resetButtonTrigger;
+    Button sendButton, resetButtonTrigger, saveReplayButton;
 
     // --------------------EVENTS-----------------------------------------
     // multi-cast delegate to search for the proper button appllied
@@ -67,6 +67,17 @@ public class TicTacToeManager : MonoBehaviour
     // ------------------------ REPLAY LIST --------------------------------
     private List<string> localListofReplays;
     [SerializeField] Dropdown replayDropdownList;
+
+    // flips on if replay is happening
+    [SerializeField] private bool isReplaying;
+    public bool IsReplaying
+    {
+        get => isReplaying;
+        set
+        {
+            isReplaying = value;
+        }
+    }
         
     /// <summary>
     /// The moment this manager turns on, go through any and all possible items
@@ -93,7 +104,10 @@ public class TicTacToeManager : MonoBehaviour
             else if (tempButton.gameObject.name == "Reset Game Button")
             {
                 resetButtonTrigger = tempButton;
-                Debug.Log("Found Reset Button");
+            }
+            else if (tempButton.gameObject.name == "Save Replay Button")
+            {
+                saveReplayButton = tempButton;
             }
         }
 
@@ -108,8 +122,12 @@ public class TicTacToeManager : MonoBehaviour
 
         sendButton.onClick.AddListener(SendChatMessage);
         resetButtonTrigger.onClick.RemoveAllListeners();
-        resetButtonTrigger.onClick.AddListener(ResetButtonPrompt);
-        //resetButton.gameObject.SetActive(false);
+        resetButtonTrigger.onClick.AddListener(ResetButtonPrompt); 
+        saveReplayButton.onClick.RemoveAllListeners();
+        saveReplayButton.onClick.AddListener(SaveReplayButtonPrompt);
+
+        resetButtonTrigger.gameObject.SetActive(false);
+        saveReplayButton.gameObject.SetActive(false);
 
         //// replay list dropdown
         localListofReplays = new List<string>();
@@ -159,6 +177,17 @@ public class TicTacToeManager : MonoBehaviour
         resetButtonTrigger.gameObject.SetActive(true);
     }
 
+    public void ActivateSaveReplayButton()
+    {
+        saveReplayButton.gameObject.SetActive(true);
+    }
+
+    public void SaveReplayButtonPrompt()
+    {
+        networkedClient.SendMessageToHost(ClientToServerSignifiers.SaveReplay + "");
+        saveReplayButton.gameObject.SetActive(false);
+    }
+
     /// <summary>
     /// Called from Button data at the specific row and column assigned, 
     /// the purpose of this function is to send information of the player's action to the server
@@ -179,6 +208,7 @@ public class TicTacToeManager : MonoBehaviour
         {
             networkedClient.SendMessageToHost(ClientToServerSignifiers.PlayerWins + "," + playerID);
             ActivateResetButton();
+            ActivateSaveReplayButton();
         }
         // check if we've hit a draw
         else
@@ -193,7 +223,7 @@ public class TicTacToeManager : MonoBehaviour
     /// <param name="row"></param>
     /// <param name="column"></param>
     /// <param name="opponentPlayer"></param>
-    public void OpponentPlacePosition(int row, int column, int opponentPlayer)
+    public void ServerPlacePosition(int row, int column, int opponentPlayer)
     {
         // assign the player
         ticTacToeboard[row, column] = opponentPlayer;
@@ -259,7 +289,7 @@ public class TicTacToeManager : MonoBehaviour
         ResetButtons();
 
         playerTurn = 1; // reset player turn
-        //resetButton.gameObject.SetActive(false);
+        resetButtonTrigger.gameObject.SetActive(false);
     }
 
     public void ResetButtons()
@@ -302,7 +332,20 @@ public class TicTacToeManager : MonoBehaviour
     private void LoadReplayDropDownChanged(Dropdown dropdown)
     {
         // send to the network that we request a replay
-        networkedClient.SendMessageToHost(ClientToServerSignifiers.RequestReplay + "," + dropdown.value);
+        networkedClient.SendMessageToHost(ClientToServerSignifiers.RequestReplay + "," + dropdown.options[dropdown.value].text);
+    }
+
+
+    public void ReplayMode()
+    {
+        if (isReplaying)
+        {
+            SpectatorShutdown();
+        }
+        else
+        {
+            ActivateResetButton();
+        }
     }
 
     #endregion 
@@ -321,6 +364,7 @@ public class TicTacToeManager : MonoBehaviour
             }
         }
     }
+  
 
     /// <summary>
     /// Simply update the board for the spectator

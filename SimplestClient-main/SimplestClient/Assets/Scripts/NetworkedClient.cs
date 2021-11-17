@@ -148,7 +148,7 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             // receive actions from the opponent
-            ticTacToeManagerRef.OpponentPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
+            ticTacToeManagerRef.ServerPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
         }
 
         // should the game room be established, start the tic tac toe game
@@ -174,6 +174,7 @@ public class NetworkedClient : MonoBehaviour
             // turn off the buttons so that no one can input in anymore
 
             ticTacToeManagerRef.ActivateResetButton();
+            ticTacToeManagerRef.ActivateSaveReplayButton();
             ticTacToeManagerRef.GameOverOnWin();
             // reset button set active, send the notification to the opponent
         }
@@ -194,6 +195,22 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Action: " + csv[1] + "," + csv[2]);
             ticTacToeManagerRef.AddToDropdownMenu(int.Parse(csv[1]), csv[2]);
+        }
+        else if (signifier == ServerToClientSignifiers.StartReplay)
+        {
+            Debug.Log("Commence Replay");
+            ticTacToeManagerRef.IsReplaying = true;
+            ticTacToeManagerRef.ReplayMode();
+        }
+        else if (signifier == ServerToClientSignifiers.ProcessReplay)
+        {
+            ticTacToeManagerRef.ServerPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
+        } 
+        else if (signifier == ServerToClientSignifiers.EndReplay)
+        {
+            Debug.Log("End Replay");
+            ticTacToeManagerRef.IsReplaying = false;
+            ticTacToeManagerRef.ReplayMode();
         }
 
         #region Spectator Specific functionality
@@ -244,7 +261,7 @@ public static class ClientToServerSignifiers
     public const int ResetGame = 8;
 
     // Replay System functionality
-    public const int LogAction = 9;
+    public const int SaveReplay = 9;
     public const int RequestReplay = 10;
 
 }
@@ -269,5 +286,7 @@ public static class ServerToClientSignifiers
     // replay functionality
     public const int ProcessReplay = 14;
     public const int UpdateReplayList = 15;
-    public const int EndReplay = 16; // specific case to end a replay when we're done running through the list so that the clients can reset the board
+    public const int StartReplay = 16;
+    public const int EndReplay = 17; // specific case to end a replay when we're done running through the list so that the clients can reset the board
+    public const int SaveReplay = 18;
 }
