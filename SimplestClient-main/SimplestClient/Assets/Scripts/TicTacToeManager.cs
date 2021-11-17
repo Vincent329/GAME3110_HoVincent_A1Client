@@ -18,8 +18,6 @@ public class TicTacToeManager : MonoBehaviour
     // if current turn is not equal to the player ID, then it's not the player's turn to move
     [SerializeField] private int playerID;
 
-    // TODO:
-    // on game start, assign the correct player ID as either 1 or 2
     public int PlayerID
     {
         get => playerID;
@@ -78,6 +76,9 @@ public class TicTacToeManager : MonoBehaviour
             isReplaying = value;
         }
     }
+
+    public Queue<TicTacToePlayAnimation> replayAnimationQueue;
+    float delayReplayAnimation;
         
     /// <summary>
     /// The moment this manager turns on, go through any and all possible items
@@ -136,6 +137,8 @@ public class TicTacToeManager : MonoBehaviour
         replayDropdownList.onValueChanged.RemoveAllListeners();
         replayDropdownList.onValueChanged.AddListener(delegate { LoadReplayDropDownChanged(replayDropdownList); });
 
+        replayAnimationQueue = new Queue<TicTacToePlayAnimation>();
+        
         //});
     }
 
@@ -148,6 +151,22 @@ public class TicTacToeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (replayAnimationQueue.Count > 0)
+        {
+            if (delayReplayAnimation <= 0.0f)
+            {
+                // QUEUE USE, the first item will be the first one played then removed from the list
+                TicTacToePlayAnimation currentPlay = replayAnimationQueue.Dequeue();
+                ServerPlacePosition(currentPlay.row, currentPlay.column, currentPlay.playerID);
+
+                delayReplayAnimation = 1.0f;
+            } else
+            {
+                delayReplayAnimation -= Time.deltaTime;
+            }
+            
+        }
+
         
     }
 
@@ -398,4 +417,21 @@ public class TicTacToeManager : MonoBehaviour
         textDisplay.text = message;
     }
 
+}
+
+/// <summary>
+/// structure for holding row, column, and player data on replay
+/// </summary>
+public class TicTacToePlayAnimation
+{
+    public int row;
+    public int column;
+    public int playerID;
+
+    public TicTacToePlayAnimation(int in_Row, int in_Column, int in_PlayerID)
+    {
+        row = in_Row;
+        column = in_Column;
+        playerID = in_PlayerID;
+    }
 }

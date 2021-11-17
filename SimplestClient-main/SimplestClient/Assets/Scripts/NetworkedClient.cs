@@ -196,15 +196,23 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("Action: " + csv[1] + "," + csv[2]);
             ticTacToeManagerRef.AddToDropdownMenu(int.Parse(csv[1]), csv[2]);
         }
+
         else if (signifier == ServerToClientSignifiers.StartReplay)
         {
             Debug.Log("Commence Replay");
+
+            // clean code note: make an enum of states 
+            // like GAMEPLAY or REPLAY or SPECTATOR
             ticTacToeManagerRef.IsReplaying = true;
             ticTacToeManagerRef.ReplayMode();
         }
         else if (signifier == ServerToClientSignifiers.ProcessReplay)
         {
-            ticTacToeManagerRef.ServerPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
+            // Replay animation data
+            // make a class that holds that
+            // rather than immediately displaying the data
+            // ticTacToeManagerRef.ServerPlacePosition(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3]));
+            ticTacToeManagerRef.replayAnimationQueue.Enqueue(new TicTacToePlayAnimation(int.Parse(csv[1]), int.Parse(csv[2]), int.Parse(csv[3])));
         } 
         else if (signifier == ServerToClientSignifiers.EndReplay)
         {
@@ -242,8 +250,6 @@ public class NetworkedClient : MonoBehaviour
     {
         return isConnected;
     }
-
-
 }
 
 
