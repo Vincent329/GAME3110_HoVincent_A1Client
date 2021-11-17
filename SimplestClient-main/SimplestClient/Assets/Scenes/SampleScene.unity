@@ -1215,7 +1215,7 @@ GameObject:
   - component: {fileID: 390446945}
   - component: {fileID: 390446944}
   m_Layer: 5
-  m_Name: Save Replay
+  m_Name: Save Replay Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

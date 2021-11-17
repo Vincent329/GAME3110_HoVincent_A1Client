@@ -133,7 +133,7 @@ public class TicTacToeManager : MonoBehaviour
         localListofReplays = new List<string>();
         // clean the list on first entry
         replayDropdownList.options.Clear();
-
+        replayDropdownList.onValueChanged.RemoveAllListeners();
         replayDropdownList.onValueChanged.AddListener(delegate { LoadReplayDropDownChanged(replayDropdownList); });
 
         //});
@@ -340,6 +340,7 @@ public class TicTacToeManager : MonoBehaviour
     {
         if (isReplaying)
         {
+            ResetButtons();
             SpectatorShutdown();
         }
         else
