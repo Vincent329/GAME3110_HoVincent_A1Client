@@ -135,9 +135,8 @@ public class NetworkedClient : MonoBehaviour
         } 
         else if (signifier == ServerToClientSignifiers.LoginComplete)
         {
-            name = csv[1];
+            ticTacToeManagerRef.playerName = csv[1];
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
-
         }
         else if (signifier == ServerToClientSignifiers.AccountCreationFailed)
         {
@@ -147,6 +146,9 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Login Failed, please try again");
         }
+
+        // ---------------- TIC TAC TOE SPECIFIC CALLS ------------------------------
+
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             // receive actions from the opponent
@@ -160,9 +162,10 @@ public class NetworkedClient : MonoBehaviour
             ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
 
-            if (ticTacToeManagerRef.PlayerID == 1 || 
-            ticTacToeManagerRef.PlayerID == 2 )
-                ticTacToeManagerRef.IDDisplay.text = "Player: " + name;            
+            if (ticTacToeManagerRef.PlayerID == 1 ||
+            ticTacToeManagerRef.PlayerID == 2)
+                
+                ticTacToeManagerRef.IDDisplay.text = "Player: " + ticTacToeManagerRef.playerName;            
             else
                 ticTacToeManagerRef.IDDisplay.text = "Spectator";
 

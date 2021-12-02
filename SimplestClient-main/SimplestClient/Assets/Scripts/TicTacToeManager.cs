@@ -27,6 +27,7 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
+    public string playerName;
     public Text textDisplay, IDDisplay;
     InputField chatInputField;
     Button sendButton, resetButtonTrigger, saveReplayButton;
@@ -157,14 +158,12 @@ public class TicTacToeManager : MonoBehaviour
                 ServerPlacePosition(currentPlay.row, currentPlay.column, currentPlay.playerID);
 
                 delayReplayAnimation = 1.0f;
-            } else
+            } 
+            else
             {
                 delayReplayAnimation -= Time.deltaTime;
-            }
-            
+            }         
         }
-
-        
     }
 
     /// <summary>
@@ -267,7 +266,7 @@ public class TicTacToeManager : MonoBehaviour
         || (ticTacToeboard[2,0] == playerID && ticTacToeboard[1, 1] == playerID && ticTacToeboard[0, 2] == playerID))
         {
             //Debug.Log("Player " + playerID + " wins");
-            textDisplay.text = "Player " + playerID + " wins";
+            textDisplay.text = playerName + " wins";
             return true;
         }
         return false;
