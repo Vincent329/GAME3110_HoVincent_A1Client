@@ -13,11 +13,12 @@ public class NetworkedClient : MonoBehaviour
     int reliableChannelID;
     int unreliableChannelID;
     int hostID;
-    int socketPort = 10563;
+    int socketPort = 10653;
     byte error;
     bool isConnected = false;
     int ourClientID;
 
+    string nameDisplay = "";
     // All the gamesystemmanager needs to worry about is keeping track of states
     GameObject gameSystemManager;
 
@@ -134,6 +135,7 @@ public class NetworkedClient : MonoBehaviour
         } 
         else if (signifier == ServerToClientSignifiers.LoginComplete)
         {
+            name = csv[1];
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
 
         }
@@ -158,10 +160,9 @@ public class NetworkedClient : MonoBehaviour
             ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
 
-            if (ticTacToeManagerRef.PlayerID == 1)
-                ticTacToeManagerRef.IDDisplay.text = "Player: O"; 
-            else if (ticTacToeManagerRef.PlayerID == 2)
-                ticTacToeManagerRef.IDDisplay.text = "Player: X";
+            if (ticTacToeManagerRef.PlayerID == 1 || 
+            ticTacToeManagerRef.PlayerID == 2 )
+                ticTacToeManagerRef.IDDisplay.text = "Player: " + name;            
             else
                 ticTacToeManagerRef.IDDisplay.text = "Spectator";
 
@@ -302,3 +303,7 @@ public static class ServerToClientSignifiers
     public const int EndReplay = 17; // specific case to end a replay when we're done running through the list so that the clients can reset the board
     public const int SaveReplay = 18;
 }
+
+// ----------- Task List --------------
+// Singleton organization
+//
