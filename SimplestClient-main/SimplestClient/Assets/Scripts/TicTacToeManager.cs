@@ -192,11 +192,18 @@ public class TicTacToeManager : MonoBehaviour
         resetButtonTrigger.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Activates the Save Replay Button
+    /// </summary>
     public void ActivateSaveReplayButton()
     {
         saveReplayButton.gameObject.SetActive(true);
     }
 
+    public void DeactivateSaveReplayButton()
+    {
+        saveReplayButton.gameObject.SetActive(false);
+    }
     public void SaveReplayButtonPrompt()
     {
         networkedClient.SendMessageToHost(ClientToServerSignifiers.SaveReplay + "");
@@ -348,7 +355,6 @@ public class TicTacToeManager : MonoBehaviour
         // send to the network that we request a replay
         networkedClient.SendMessageToHost(ClientToServerSignifiers.RequestReplay + "," + dropdown.options[dropdown.value].text);
     }
-
 
     public void ReplayMode()
     {

@@ -50,10 +50,6 @@ public class GameSystemManager : MonoBehaviour
             {
                 joinGameButton = go;
             }
-            //else if (go.name == "TicTacToeSquareButton")
-            //{
-            //    ticTacToeSquareButton = go;
-            //}
 
             else if (go.name == "UsernameText")
             {

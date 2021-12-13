@@ -18,7 +18,6 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
-    string nameDisplay = "";
     // All the gamesystemmanager needs to worry about is keeping track of states
     GameObject gameSystemManager;
 
@@ -131,6 +130,7 @@ public class NetworkedClient : MonoBehaviour
 
         if (signifier == ServerToClientSignifiers.AccountCreationComplete)
         {
+            ticTacToeManagerRef.playerName = csv[1];
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.MainMenu);
         } 
         else if (signifier == ServerToClientSignifiers.LoginComplete)
@@ -159,12 +159,11 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeStates(GameStates.TicTacToe);
-            ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count
+            ticTacToeManagerRef.PlayerTurn = 1; // set up the turn count for both players
             ticTacToeManagerRef.PlayerID = int.Parse(csv[1]); // set up the player ID
 
             if (ticTacToeManagerRef.PlayerID == 1 ||
             ticTacToeManagerRef.PlayerID == 2)
-                
                 ticTacToeManagerRef.IDDisplay.text = "Player: " + ticTacToeManagerRef.playerName;            
             else
                 ticTacToeManagerRef.IDDisplay.text = "Spectator";
@@ -175,7 +174,6 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("Change Message Here: "+ csv[1]);
 
             // connect to the Tic Tac Toe Manager through the game manager...
-            // might be a cleaner way to do this but this works
             ticTacToeManagerRef.ReceiveMessage(csv[1]);
         }
         else if (signifier == ServerToClientSignifiers.NotifyOpponentWin)
@@ -215,6 +213,7 @@ public class NetworkedClient : MonoBehaviour
             // like GAMEPLAY or REPLAY or SPECTATOR
             ticTacToeManagerRef.IsReplaying = true;
             ticTacToeManagerRef.ReplayMode();
+            ticTacToeManagerRef.DeactivateSaveReplayButton();
         }
         else if (signifier == ServerToClientSignifiers.ProcessReplay)
         {
@@ -229,6 +228,10 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("End Replay");
             ticTacToeManagerRef.IsReplaying = false;
             ticTacToeManagerRef.ReplayMode();
+        }
+        else if (signifier == ServerToClientSignifiers.ReplaySaved)
+        {
+            ticTacToeManagerRef.DeactivateSaveReplayButton();
         }
 
         #region Spectator Specific functionality
@@ -304,7 +307,7 @@ public static class ServerToClientSignifiers
     public const int UpdateReplayList = 15;
     public const int StartReplay = 16;
     public const int EndReplay = 17; // specific case to end a replay when we're done running through the list so that the clients can reset the board
-    public const int SaveReplay = 18;
+    public const int ReplaySaved = 18;
 }
 
 // ----------- Task List --------------
